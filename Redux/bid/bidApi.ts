@@ -124,7 +124,7 @@ const bidApi = api.injectEndpoints({
     updateBidScore: builder.mutation({
       query: ({ bidId, technicalScore, financialScore }) => ({
         url: `/bid/update-score/${bidId}`,
-        method: "PATCH",
+        method: "POST",
         body: { technicalScore, financialScore },
       }),
       invalidatesTags: ["bids"],
@@ -133,7 +133,7 @@ const bidApi = api.injectEndpoints({
     setBidStatus: builder.mutation({
       query: ({ bidId, status, ranking, message }) => ({
         url: `/bid/set-status/${bidId}`,
-        method: "PUT",
+        method: "POST",
         body: { status, ranking, message },
       }),
       invalidatesTags: ["bids"],
@@ -158,7 +158,7 @@ const bidApi = api.injectEndpoints({
     setBidRanking: builder.mutation({
       query: ({ bidId, ranking }) => ({
         url: `/bid/set-ranking/${bidId}`,
-        method: "PUT",
+        method: "POST",
         body: { ranking },
       }),
       invalidatesTags: ["rankedBids"],
@@ -184,7 +184,7 @@ const bidApi = api.injectEndpoints({
     approveBid: builder.mutation({
       query: (bidId) => ({
         url: `/bid/approve-bid/${bidId}`,
-        method: "PUT",
+        method: "POST",
       }),
     }),
 
