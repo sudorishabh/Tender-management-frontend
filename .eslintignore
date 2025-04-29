@@ -1,0 +1,28 @@
+# Ignore binary files
+*.zip
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.svg
+*.pdf
+*.mp4
+*.webm
+*.mp3
+*.wav
+*.tsbuildinfo
+
+# Ignore build output
+.next/
+node_modules/
+public/
+out/
+build/
+
+# Generated files
+*.min.js 
