@@ -1,9 +1,4 @@
-"use client";
 import { Button } from "@/components/ui/button";
-import {
-  useDeleteCategoriesMutation,
-  useGetCategoriesQuery,
-} from "@/Redux/category/categoryApi";
 import {
   LoaderCircle,
   Trash,
@@ -13,35 +8,26 @@ import {
   Building,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { FC } from "react";
 import CategoriesTable from "@/components/Categories/For-Admin/CategoriesTable";
-import { toast } from "sonner";
-import PageError from "@/components/Shared/PageError";
 import { secondaryButtonStyle2 } from "@/app/Styles";
 import { cn } from "@/lib/utils";
+import { ICategories } from "@/Types/Category-Types";
+interface Props {
+  isCategoryDelete: string[];
+  setIsCategoryDelete: (isCategoryDelete: string[]) => void;
+  handleDeleteCategories: () => void;
+  deletingMultiple: boolean;
+  categoriesData: ICategories;
+}
 
-const ManageCategories = () => {
-  const [isCategoryDelete, setIsCategoryDelete] = useState<string[]>([]);
-  const { data, isLoading, isError } = useGetCategoriesQuery({});
-  const [deleteCategories, { isLoading: deletingMultiple }] =
-    useDeleteCategoriesMutation();
-
-  async function handleDeleteCategories() {
-    try {
-      const deleted = await deleteCategories(isCategoryDelete).unwrap();
-      if (deleted.success) {
-        toast.success("Categories Deleted Successfully");
-        setIsCategoryDelete([]);
-      }
-    } catch {
-      toast.error("Error Deleting Categories");
-    }
-  }
-
-  if (isError) {
-    return <PageError message='Error fetching categories' />;
-  }
-
+const ManageCategories: FC<Props> = ({
+  isCategoryDelete,
+  setIsCategoryDelete,
+  handleDeleteCategories,
+  deletingMultiple,
+  categoriesData,
+}) => {
   return (
     <div>
       <div className='w-full bg-white border-b mb-8'>
@@ -73,7 +59,9 @@ const ManageCategories = () => {
                   size={16}
                   className='text-gray-400'
                 />
-                <span>Total Categories: {data?.categories?.length || 0}</span>
+                <span>
+                  Total Categories: {categoriesData?.categories?.length || 0}
+                </span>
               </div>
               {isCategoryDelete.length > 0 && (
                 <Button
@@ -97,16 +85,9 @@ const ManageCategories = () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <div className='bg-white p-20 flex flex-col items-center justify-center'>
-              <LoaderCircle
-                className='animate-spin mb-4 text-primary'
-                size={36}
-              />
-            </div>
-          ) : data?.categories?.length ? (
+          {categoriesData?.categories?.length ? (
             <CategoriesTable
-              data={data}
+              data={categoriesData}
               setIsCategoryDelete={setIsCategoryDelete}
               isCategoryDelete={isCategoryDelete}
             />

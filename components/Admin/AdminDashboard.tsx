@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
+import { primaryButtonStyle } from "@/app/Styles";
 
 // Mock data for demonstration (will need to be replaced with actual API calls)
 const mockStats = {
@@ -225,7 +226,7 @@ const AdminDashboard = () => {
             </div>
             <Button
               onClick={() => router.push("/admin/create-tender")}
-              className='bg-primary  hover:bg-primary/90 text-white'>
+              className={primaryButtonStyle}>
               <FilePlus2 className='mr-2 h-4 w-4' /> Create New Tender
             </Button>
           </div>
@@ -240,28 +241,28 @@ const AdminDashboard = () => {
           className='space-y-6 '>
           <div className=' border-gray-100 overflow-hidden'>
             <div className='py-4 px-2 border-b'>
-              <TabsList className='bg-transparent border border-gray-200 p-1'>
+              <TabsList className='bg-transparent border rounded-full border-gray-200 p-1'>
                 <TabsTrigger
                   value='overview'
-                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-md'>
+                  className='data-[state=active]:bg-primary px-8 rounded-full data-[state=active]:text-white '>
                   <LayoutDashboard className='h-4 w-4 mr-2' />
                   Overview
                 </TabsTrigger>
                 <TabsTrigger
                   value='tenders'
-                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-md'>
+                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-full'>
                   <ClipboardList className='h-4 w-4 mr-2' />
                   Tenders
                 </TabsTrigger>
                 <TabsTrigger
                   value='bids'
-                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-md'>
+                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-full'>
                   <BarChart4 className='h-4 w-4 mr-2' />
                   Bids
                 </TabsTrigger>
                 <TabsTrigger
                   value='vendors'
-                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-md'>
+                  className='data-[state=active]:bg-primary px-8 data-[state=active]:text-white rounded-full'>
                   <Users className='h-4 w-4 mr-2' />
                   Vendors
                 </TabsTrigger>

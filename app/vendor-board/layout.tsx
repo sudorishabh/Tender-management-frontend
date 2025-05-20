@@ -1,6 +1,15 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { VendorSidebar } from "@/components/Vendor/For-Vendor/VendorSidebar";
 import Protected from "@/components/Auth/Protected";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "TERI Tenders | Vendor Dashboard",
+  description:
+    "TERI Tenders is a comprehensive platform enabling vendors to discover, bid, and manage tenders efficiently.",
+  keywords:
+    "TERI Tenders, Vendor Dashboard, Vendor Management, Tender Management",
+};
 
 export default function DashboardLayout({
   children,

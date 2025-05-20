@@ -3,7 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import RootProvider from "../components/RootProvider";
 import Header from "../components/Header/Header";
-import PersistentUser from "@/components/Auth/PersistentUser";
+import PersistLogin from "@/components/Auth/PersistLogin";
 import { Toaster } from "@/components/ui/sonner";
 
 const robotoMono = DM_Sans({
@@ -12,8 +12,14 @@ const robotoMono = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Teri Tender Management",
-  description: "Teri Tender Management",
+  title: "TERI Tenders",
+  description:
+    "TERI Tenders is a comprehensive platform enabling vendors to discover, bid, and manage tenders efficiently.",
+  keywords:
+    "TERI Tenders, Vendor Bidding, Tender Management, Procurement Platform, Bid Management System",
+  icons: {
+    icon: "/TERI_LOGO.png",
+  },
 };
 
 export default function RootLayout({
@@ -23,16 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <head>
-        {/* <script
-          crossOrigin='anonymous'
-          src='//unpkg.com/react-scan/dist/auto.global.js'
-        /> */}
-      </head>
       <body
         className={`${robotoMono.className} antialiased bg-white min-h-svh`}>
         <RootProvider>
-          <PersistentUser>
+          <PersistLogin>
             <Header />
             <main>{children}</main>
             <Toaster
@@ -42,7 +42,7 @@ export default function RootLayout({
               position='top-center'
               closeButton={true}
             />
-          </PersistentUser>
+          </PersistLogin>
         </RootProvider>
       </body>
     </html>

@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import { useDeleteFileUrlMutation } from "@/Redux/s3-files/s3-files-Api";
 import useUploadFileToS3 from "@/hooks/useUploadFileToS3";
 import { useRouter } from "next/navigation";
-import { ApiError } from "@/app/Types";
+import { ApiError } from "@/Types";
 import { ErrorCodes } from "@/lib/errorCodes";
 interface Props {
   tenderId: string;

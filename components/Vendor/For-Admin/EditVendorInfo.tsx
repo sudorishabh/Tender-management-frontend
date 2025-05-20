@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, FC } from "react";
 import {
   Save,
@@ -21,37 +20,13 @@ import { Badge } from "@/components/ui/badge";
 import { borderStyle, primaryButtonStyle } from "@/app/Styles";
 import { cn } from "@/lib/utils";
 import { useUploadVendorByAdminMutation } from "@/Redux/vendor/vendorApi";
-import { ApiError } from "@/app/Types";
+import { ApiError } from "@/Types";
 import { ErrorCodes } from "@/lib/errorCodes";
+import { IVendorEditResponse } from "@/Types/Vendor-Types";
 
 interface Props {
+  data: IVendorEditResponse;
   vendorId: string;
-  data: {
-    vendorDetails: {
-      user: {
-        id: string;
-        fullname: string;
-        phoneNumber: string;
-        panCardNumber: string;
-        panCardDoc: null;
-        createdAt: string;
-        status: string;
-      };
-      business: {
-        id: string;
-        businessName: string;
-        registrationNumber: string;
-        establishedYear: string;
-        addressLineOne: string;
-        addressLineTwo: string;
-        locality: string;
-        city: string;
-        pinCode: string;
-        country: string;
-        registrationDoc: null;
-      };
-    };
-  };
 }
 
 interface FormData {
@@ -115,13 +90,13 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
 
       reset({
         user: {
-          id: vendorDetails.user.id,
+          id: vendorDetails.user.id.toString(),
           fullname: vendorDetails.user.fullname,
           phoneNumber: vendorDetails.user.phoneNumber,
           panCardNumber: vendorDetails.user.panCardNumber,
         },
         business: {
-          id: vendorDetails.business.id,
+          id: vendorDetails.business.id.toString(),
           businessName: vendorDetails.business.businessName,
           registrationNumber: vendorDetails.business.registrationNumber,
           establishedYear: vendorDetails.business.establishedYear,

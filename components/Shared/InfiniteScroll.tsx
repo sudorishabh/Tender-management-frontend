@@ -1,16 +1,8 @@
 import { cn } from "@/lib/utils";
 import { LoaderCircle } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 
-const InfiniteScroll = ({
-  hasMore,
-  isFetching,
-  refetch,
-  children,
-  className,
-  pageRef,
-  asTableRows = false,
-}: {
+interface Props {
   hasMore: boolean;
   isFetching: boolean;
   refetch: () => void;
@@ -18,6 +10,15 @@ const InfiniteScroll = ({
   className?: string;
   pageRef: React.MutableRefObject<number>;
   asTableRows?: boolean;
+}
+const InfiniteScroll: FC<Props> = ({
+  hasMore,
+  isFetching,
+  refetch,
+  children,
+  className,
+  pageRef,
+  asTableRows = false,
 }) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   useEffect(() => {

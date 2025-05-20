@@ -7,7 +7,7 @@ export default function DashboardLayout({
 }) {
   return (
     <PublicProtected>
-      <main>{children}</main>;
+      <main className='pt-14'>{children}</main>;
     </PublicProtected>
   );
 }

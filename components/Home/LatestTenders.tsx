@@ -2,7 +2,7 @@ import { useGetLiveTendersQuery } from "@/Redux/tender/tenderApi";
 import React, { useEffect, useRef } from "react";
 import TenderCardSkeleton from "../Shared/skeleton/TenderCardSkeleton";
 import TenderCard from "../Tender/TenderCard";
-import { ITenderCard } from "@/app/Types/Tender-Types";
+import { ITenderCard } from "@/Types/Tender-Types";
 import { cn } from "@/lib/utils";
 import { borderStyle } from "@/app/Styles";
 import InfiniteScroll from "../Shared/InfiniteScroll";

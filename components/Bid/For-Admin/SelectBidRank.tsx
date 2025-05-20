@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Medal, Trophy } from "lucide-react";
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard } from "@/Types/Bid-Types";
 
 const SelectBidRank = ({
   bid,
@@ -66,7 +66,7 @@ const SelectBidRank = ({
                   <span>3rd Place</span>
                 </div>
               )}
-              {rank > 3 && `Rank ${rank}`}
+              {rank > 3 && `${rank}th Place`}
             </SelectItem>
           ))}
         </SelectContent>

@@ -37,7 +37,7 @@ import InfoCard from "@/components/Shared/InfoCard";
 import { formLabelStyle, inputStyle, primaryButtonStyle } from "@/app/Styles";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { ApiError } from "@/app/Types";
+import { ApiError } from "@/Types";
 import { ErrorCodes } from "@/lib/errorCodes";
 
 interface Props {

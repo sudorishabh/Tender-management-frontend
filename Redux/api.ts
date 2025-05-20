@@ -62,6 +62,7 @@ export const api = createApi({
     "rankedBids",
     "selectedBids",
     "rejectedBids",
+    "SavedTenders",
   ],
   endpoints: () => ({}),
 });

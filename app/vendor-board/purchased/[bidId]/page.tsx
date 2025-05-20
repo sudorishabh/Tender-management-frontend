@@ -1,10 +1,10 @@
-import BidDetails from "@/components/Bid/For-Admin/BidDetails";
+// import BidDetails from "@/components/Bid/For-Admin/BidDetails";
 import Heading from "@/components/Shared/Heading";
-import React, { use } from "react";
+// import React, { use } from "react";
 
-const Details = ({ params }: { params: Promise<{ bidId: string }> }) => {
-  const resolvedParams = use(params);
-  const { bidId } = resolvedParams;
+const Details = () => {
+  // const resolvedParams = use(params);
+  // const { bidId } = resolvedParams;
 
   return (
     <div className='pt-[3.8rem]'>
@@ -13,7 +13,7 @@ const Details = ({ params }: { params: Promise<{ bidId: string }> }) => {
         description='A platform for venders to bid'
         keywords='Tender, Vender, Projects'
       />
-      <BidDetails bidId={bidId} />
+      {/* <BidDetails  /> */}
     </div>
   );
 };

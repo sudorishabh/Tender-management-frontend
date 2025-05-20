@@ -3,7 +3,7 @@ import {
   primaryButtonStyle,
   secondaryButtonStyle2,
 } from "@/app/Styles";
-import { IAllTenderCard } from "@/app/Types/Tender-Types";
+import { IAllTenderCard } from "@/Types/Tender-Types";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { capitalizeFirstLetter } from "@/lib/helper";
@@ -19,6 +19,7 @@ import {
   Building,
   HandCoins,
   Star,
+  Edit,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -136,32 +137,42 @@ const TenderCardWithActions = ({ tender }: { tender: IAllTenderCard }) => {
           </div>
         </div>
 
-        <div className='flex flex-wrap justify-end pr-5 gap-5 py-4 bg-gray-50 border-t border-gray-100'>
-          <Link href={`/tender/${tender.id}`}>
+        <div className='flex flex-wrap justify-between py-4 bg-gray-50 border-t border-gray-100'>
+          <span className='flex gap-2 px-4'>
+            <Link href={`/tender/${tender.id}`}>
+              <Button
+                size='sm'
+                className='bg-transparent text-gray-900 hover:bg-transparent hover:text-gray-900 shadow-none'>
+                <Eye className='h-4 w-4' />
+                View Details
+              </Button>
+            </Link>
             <Button
               size='sm'
               className='bg-transparent text-gray-900 hover:bg-transparent hover:text-gray-900 shadow-none'>
-              <Eye className='h-4 w-4' />
-              View Details
+              <Edit className='h-4 w-4' />
+              Edit
             </Button>
-          </Link>
-          <Link href={`/admin/live/${tender.id}/bid/reviewed`}>
-            <Button
-              size='sm'
-              className={secondaryButtonStyle2}>
-              <Star className='h-4 w-4' />
-              Reviewed Bids
-            </Button>
-          </Link>
+          </span>
+          <span className='flex gap-2 px-4'>
+            <Link href={`/admin/live/${tender.id}/bid/reviewed`}>
+              <Button
+                size='sm'
+                className={secondaryButtonStyle2}>
+                <Star className='h-4 w-4' />
+                Reviewed Bids
+              </Button>
+            </Link>
 
-          <Link href={`/admin/live/${tender.id}/bid`}>
-            <Button
-              size='sm'
-              className={primaryButtonStyle}>
-              <HandCoins className='h-4 w-4' />
-              Bids
-            </Button>
-          </Link>
+            <Link href={`/admin/live/${tender.id}/bid`}>
+              <Button
+                size='sm'
+                className={primaryButtonStyle}>
+                <HandCoins className='h-4 w-4' />
+                Bids
+              </Button>
+            </Link>
+          </span>
         </div>
       </Card>
     </div>

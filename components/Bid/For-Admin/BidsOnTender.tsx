@@ -1,50 +1,59 @@
-"use client";
-import { FC, useRef, useState } from "react";
+import { FC } from "react";
 import { BidCard } from "@/components/Bid/BidCard";
-import {
-  useGetTenderBidsQuery,
-  useSetBidStatusMutation,
-} from "@/Redux/bid/bidApi";
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard, IBidsOnTenderResponse } from "@/Types/Bid-Types";
 import { SearchX, ListOrdered, Info, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import PageLoading from "@/components/Shared/PageLoading";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { ErrorCodes } from "@/lib/errorCodes";
-import { toast } from "sonner";
-import { ApiError } from "@/app/Types";
 import { primaryButtonStyle } from "@/app/Styles";
 import BidStatusConfirmDialog from "@/components/Bid/For-Admin/BidStatusConfirmDialog";
 import InfiniteScroll from "@/components/Shared/InfiniteScroll";
+import { NextRouter } from "next/router";
 
-interface BidsOnTenderProps {
-  tenderId: string;
-}
-
-const BidsOnTender: FC<BidsOnTenderProps> = ({ tenderId }) => {
-  const pageRef = useRef(1);
-  const [scoreFilter, setScoreFilter] = useState<string>("all");
-  const { data, isLoading, refetch, isFetching } = useGetTenderBidsQuery({
-    tenderId,
-    scoreFilter,
-    page: pageRef.current,
-    limit: 10,
-  });
-  const [setBidStatus, { isLoading: isSettingBidStatus }] =
-    useSetBidStatusMutation();
-  const router = useRouter();
-  const [confirmDialog, setConfirmDialog] = useState<{
+interface Props {
+  data: IBidsOnTenderResponse;
+  isLoading: boolean;
+  refetch: () => void;
+  isFetching: boolean;
+  pageRef: React.MutableRefObject<number>;
+  setConfirmDialog: (confirmDialog: {
     isOpen: boolean;
     bidId: string;
     status: string;
     ranking?: number;
-  }>({
-    isOpen: false,
-    bidId: "",
-    status: "",
-  });
+  }) => void;
+  confirmDialog: {
+    isOpen: boolean;
+    bidId: string;
+    status: string;
+    ranking?: number;
+  };
+  tenderId: string;
+  setBidStatus: (bidStatus: {
+    bidId: string;
+    status: string;
+    ranking?: number;
+  }) => void;
+  isSettingBidStatus: boolean;
+  router: NextRouter;
+  scoreFilter: string;
+  setScoreFilter: (scoreFilter: string) => void;
+  confirmSetBidStatus: () => void;
+}
 
+const BidsOnTender: FC<Props> = ({
+  data,
+  refetch,
+  isFetching,
+  pageRef,
+  setConfirmDialog,
+  confirmDialog,
+  isSettingBidStatus,
+  router,
+  scoreFilter,
+  setScoreFilter,
+  tenderId,
+  confirmSetBidStatus,
+}) => {
   async function handleSetBidStatus({
     bidId,
     status,
@@ -62,27 +71,6 @@ const BidsOnTender: FC<BidsOnTenderProps> = ({ tenderId }) => {
     });
   }
 
-  async function confirmSetBidStatus() {
-    try {
-      await setBidStatus({
-        bidId: confirmDialog.bidId,
-        status: confirmDialog.status,
-        ranking: confirmDialog.ranking,
-      }).unwrap();
-      toast.success("Bid status set successfully");
-      setConfirmDialog({ ...confirmDialog, isOpen: false });
-    } catch (error) {
-      const apiError = error as ApiError;
-      if (apiError?.data?.errorCode && ErrorCodes[apiError.data.errorCode]) {
-        toast.error(ErrorCodes[apiError.data.errorCode]);
-      } else {
-        toast.error("Bid status set failed. Please try again.");
-      }
-      setConfirmDialog({ ...confirmDialog, isOpen: false });
-    }
-  }
-
-  if (isLoading) return <PageLoading />;
   return (
     <div>
       <div className='w-full bg-white mb-7'>

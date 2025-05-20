@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IVenderCategoryTable } from "@/app/Types/Category-Types";
+import { IVenderCategoryTable } from "@/Types/Category-Types";
 import { capitalizeFirstLetter } from "@/lib/helper";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";

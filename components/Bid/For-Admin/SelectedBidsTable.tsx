@@ -1,4 +1,4 @@
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard } from "@/Types/Bid-Types";
 import React from "react";
 import {
   Table,
@@ -37,7 +37,6 @@ const SelectedBidsTable = ({
       console.error("Error setting ranking:", error);
     }
   };
-
 
   return (
     <Table>

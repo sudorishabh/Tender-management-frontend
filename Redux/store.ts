@@ -1,22 +1,23 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./auth/authSlice";
 import { api } from "./api";
-import venderRegistrationSlice from "./vendor/venderRegistrationSlice";
-import venderDetailsPageSlice from "./vendor/venderDetailsPageSlice";
+import venderSlice from "./vendor/venderSlice";
 import tenderSlice from "./tender/tenderSlice";
 import categorySlice from "./category/categorySlice";
+import { informApi } from "./inform/informApi";
+
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
+    [informApi.reducerPath]: informApi.reducer,
     authSlice: authSlice.reducer,
-    venderRegistrationSlice: venderRegistrationSlice.reducer,
-    venderDetailsPageSlice: venderDetailsPageSlice.reducer,
+    venderSlice: venderSlice.reducer,
     tenderSlice: tenderSlice.reducer,
     categorySlice: categorySlice.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware().concat(api.middleware).concat(informApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

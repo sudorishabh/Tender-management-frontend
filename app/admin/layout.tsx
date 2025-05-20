@@ -2,6 +2,16 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/Admin/AdminSidebar";
 import Protected from "@/components/Auth/Protected";
 import { Menu, PanelLeftClose } from "lucide-react";
+import { ROLES } from "@/lib/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "TERI Tenders | Admin Dashboard",
+  description:
+    "TERI Tenders is a comprehensive platform enabling vendors to discover, bid, and manage tenders efficiently.",
+  keywords:
+    "TERI Tenders, Admin Dashboard, Vendor Management, Tender Management",
+};
 
 export default function DashboardLayout({
   children,
@@ -9,7 +19,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Protected allowedRoles={["admin"]}>
+    <Protected allowedRoles={[ROLES.ADMIN]}>
       <SidebarProvider
         style={
           {

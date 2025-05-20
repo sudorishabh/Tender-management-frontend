@@ -31,13 +31,13 @@ import InfoCard from "@/components/Shared/InfoCard";
 
 interface Props {
   setActive: (active: number) => void;
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
 const VenderDocRequirement: FC<Props> = ({
   setActive,
-  onSave,
+  handleSaveTender,
   isSavingTender,
 }) => {
   const {
@@ -96,7 +96,7 @@ const VenderDocRequirement: FC<Props> = ({
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}
@@ -210,12 +210,12 @@ const VenderDocRequirement: FC<Props> = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value='pdf'>PDF</SelectItem>
-                          <SelectItem value='word'>Word Document</SelectItem>
+                          {/* <SelectItem value='word'>Word Document</SelectItem>
                           <SelectItem value='excel'>
                             Excel Spreadsheet
                           </SelectItem>
                           <SelectItem value='image'>Image Files</SelectItem>
-                          <SelectItem value='other'>Other Format</SelectItem>
+                          <SelectItem value='other'>Other Format</SelectItem> */}
                         </SelectContent>
                       </Select>
                       {getErrorMessage(`venderDocRequirement.${i}.type`) && (

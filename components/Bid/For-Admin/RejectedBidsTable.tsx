@@ -1,4 +1,4 @@
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard } from "@/Types/Bid-Types";
 import {
   Table,
   TableCell,
@@ -42,7 +42,6 @@ const RejectedBidsTable = ({
     if (score === 3) return "text-yellow-600";
     return "text-red-600";
   };
-
 
   const openMessageDialog = (bid: IBidCard) => {
     setSelectedBid(bid);

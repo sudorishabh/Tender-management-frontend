@@ -18,7 +18,7 @@ import {
 import { Mail, UserCircle, Trophy, Check, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { primaryButtonStyle } from "@/app/Styles";
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard } from "@/Types/Bid-Types";
 import {
   useApproveBidMutation,
   useGetRankedBidsQuery,
@@ -73,7 +73,7 @@ const BidRankingDialog = ({
       toast.error("Failed to approve bid");
     }
   };
- 
+
   return (
     <>
       <Dialog

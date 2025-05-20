@@ -35,7 +35,7 @@ import {
   setHomeTenderSortBy,
 } from "@/Redux/tender/tenderSlice";
 import { RootState } from "@/Redux/store";
-import { ICategoryName } from "@/app/Types/Category-Types";
+import { ICategoryName } from "@/Types/Category-Types";
 import { capitalizeFirstLetter } from "@/lib/helper";
 
 const HomeTendersActionBar = ({

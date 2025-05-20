@@ -5,7 +5,7 @@ import {
   ITenderPreQualification,
   ITenderSupportDocument,
   IVenderDocRequirement,
-} from "@/app/Types/Tender-Types";
+} from "@/Types/Tender-Types";
 // import { toast } from "sonner";
 
 export function capitalizeFirstLetter(str: string) {

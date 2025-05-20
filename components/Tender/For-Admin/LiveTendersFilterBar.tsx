@@ -21,7 +21,7 @@ import {
 import { useGetCategoriesNamesQuery } from "@/Redux/category/categoryApi";
 import { departments } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { ICategoryName } from "@/app/Types/Category-Types";
+import { ICategoryName } from "@/Types/Category-Types";
 
 const LiveTendersFilterBar: FC = () => {
   const { data: categoriesData, isLoading: isCategoriesLoading } =

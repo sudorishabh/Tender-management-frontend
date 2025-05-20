@@ -1,4 +1,4 @@
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard } from "@/Types/Bid-Types";
 import { api } from "../api";
 
 export interface IPurchasedBidCard {

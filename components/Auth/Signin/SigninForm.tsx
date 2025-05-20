@@ -1,6 +1,4 @@
-"use client";
-import { ApiError, ISigninInputs } from "@/app/Types";
-import { useLoginUserMutation } from "@/Redux/auth/authApi";
+import { ISigninInputs } from "@/Types";
 import {
   ArrowRight,
   Eye,
@@ -12,63 +10,37 @@ import {
   Info,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { FC } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { primaryButtonStyle } from "@/app/Styles";
-import { ErrorCodes } from "@/lib/errorCodes";
 import { cn } from "@/lib/utils";
 
-const SigninForm = () => {
-  const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+interface Props {
+  onSubmit: (data: ISigninInputs) => void;
+  isLoading: boolean;
+  showPassword: boolean;
+  togglePasswordVisibility: () => void;
+  rememberMe: boolean;
+  setRememberMe: (val: boolean) => void;
+}
 
-  const [loginUser, { isLoading }] = useLoginUserMutation();
-
+const SigninForm: FC<Props> = ({
+  onSubmit,
+  isLoading,
+  showPassword,
+  togglePasswordVisibility,
+  rememberMe,
+  setRememberMe,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ISigninInputs>();
-
-  async function onSubmit(data: ISigninInputs) {
-    try {
-      if (rememberMe) {
-        localStorage.setItem("rememberedEmail", data.email);
-      } else {
-        localStorage.removeItem("rememberedEmail");
-      }
-      const result = await loginUser(data).unwrap();
-      if (result.success) {
-        router.push("/");
-        toast.success("Sign In Successfully!");
-      }
-    } catch (error) {
-      const apiError = error as ApiError;
-      if (apiError?.data?.errorCode && ErrorCodes[apiError.data.errorCode]) {
-        toast.error(ErrorCodes[apiError.data.errorCode]);
-      } else {
-        toast.error("Something went wrong. Please try again later.");
-      }
-    }
-  }
-
-  useEffect(() => {
-    const rememberedEmail = localStorage.getItem("rememberedEmail");
-    if (rememberedEmail) {
-      setRememberMe(true);
-    }
-  }, []);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4'>

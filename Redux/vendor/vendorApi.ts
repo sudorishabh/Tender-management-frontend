@@ -1,4 +1,4 @@
-import { IVendorsTable } from "@/app/Types/Vender-Types";
+import { IVendorsTable } from "@/Types/Vendor-Types";
 import { api } from "../api";
 
 interface VendorResponse {
@@ -27,11 +27,12 @@ interface CategoryVendorResponse {
   hasMore: boolean;
   page: number;
 }
+
 const vendorApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getVendors: builder.query({
-      query: ({ page = 1, limit = 10 }) => ({
-        url: `/vendor/all?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 10, status, category }) => ({
+        url: `/vendor/all?page=${page}&limit=${limit}&status=${status}&category=${category}`,
         method: "GET",
       }),
       serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
@@ -57,6 +58,7 @@ const vendorApi = api.injectEndpoints({
       },
       providesTags: ["get_vendors"],
     }),
+
     getVendorDetails: builder.query({
       query: (id) => ({
         url: `/vendor/details/${id}`,

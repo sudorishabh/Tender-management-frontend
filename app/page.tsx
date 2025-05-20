@@ -1,18 +1,42 @@
+"use client";
 import GeneralWrapper from "@/components/Shared/GeneralWrapper";
 import Home from "../components/Home/Home";
-import Heading from "@/components/Shared/Heading";
+import { useGetCategoriesNamesQuery } from "@/Redux/category/categoryApi";
+import { setCategories } from "@/Redux/category/categorySlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
+import React, { useEffect } from "react";
 
-export default function Main() {
-  return (
-    <>
-      <Heading
-        title='Teri Tender Management | Streamline Vendor Bidding'
-        description='Teri Tender Management is a comprehensive platform enabling vendors to discover, bid, and manage tenders efficiently.'
-        keywords='Tenders, Vendor Bidding, Tender Management, Procurement Platform, Bid Management System'
-      />
-      <GeneralWrapper>
-        <Home />
-      </GeneralWrapper>
-    </>
+const HomePage = () => {
+  const dispatch = useDispatch();
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useGetCategoriesNamesQuery({});
+
+  const { isLoggedIn, isRefreshing: isLoading } = useSelector(
+    (state: RootState) => state.authSlice
   );
-}
+  const { activeTenderTab } = useSelector(
+    (state: RootState) => state.tenderSlice
+  );
+
+  useEffect(() => {
+    if (categoriesData) {
+      dispatch(setCategories(categoriesData));
+    }
+  }, [categoriesData, dispatch]);
+
+  return (
+    <GeneralWrapper>
+      <Home
+        categoriesData={categoriesData?.categories}
+        isCategoriesLoading={isCategoriesLoading}
+        isLoggedIn={isLoggedIn}
+        isLoading={isLoading}
+        activeTenderTab={activeTenderTab}
+      />
+    </GeneralWrapper>
+  );
+};
+
+export default HomePage;

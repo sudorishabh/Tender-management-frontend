@@ -26,6 +26,12 @@ export interface ICategories {
     status: string;
     created_at: string;
   }[];
+  success: boolean;
+}
+
+export interface ICategoriesResponse {
+  categories: ICategoryName[];
+  success: boolean;
 }
 
 export interface ICategoryAddUpdateData {

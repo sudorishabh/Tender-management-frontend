@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import {
   Building2,
   Banknote,
@@ -8,16 +8,18 @@ import {
   Hash,
   Briefcase,
   Tag,
+  Calendar,
+  FileText,
+  CheckCircle,
+  FileCheck,
+  Star,
 } from "lucide-react";
 import GeneralWrapper from "../Shared/GeneralWrapper";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
-import { useSelector } from "react-redux";
-import { RootState } from "@/Redux/store";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Separator } from "../ui/separator";
 
 interface TenderData {
   id: string;
@@ -89,28 +91,27 @@ interface ApiResponse {
   tenderData: TenderDataResponse;
 }
 
-// Date display component
-interface DateDisplayProps {
-  label: string;
-  date: string;
-}
-
-function DateDisplay({ label, date }: DateDisplayProps) {
-  return (
-    <div className='flex justify-between p-3 border-b border-gray-100 last:border-0'>
-      <span className='text-gray-600'>{label}</span>
-      <span className='font-medium'>{format(new Date(date), "PP")}</span>
-    </div>
-  );
-}
-
 interface TenderDetailsProps {
   tenderData: ApiResponse;
 }
 
-const TenderDetails: FC<TenderDetailsProps> = ({ tenderData }) => {
-  const { isLoggedIn } = useSelector((state: RootState) => state.authSlice);
+// SectionHeader component
+const SectionHeader = ({
+  icon,
+  title,
+}: {
+  icon: React.ReactNode;
+  title: string;
+}) => (
+  <div className='flex items-center gap-2 mb-6'>
+    <div className='h-9 w-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600'>
+      {icon}
+    </div>
+    <h2 className='text-xl font-semibold text-gray-800'>{title}</h2>
+  </div>
+);
 
+const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
   const {
     tender,
     bidderDocumentsReq,
@@ -123,7 +124,10 @@ const TenderDetails: FC<TenderDetailsProps> = ({ tenderData }) => {
       case "live":
         return (
           <Badge className='bg-green-100 text-green-800 hover:bg-green-200'>
-            Active
+            <span className='flex items-center gap-1.5'>
+              <span className='h-2 w-2 rounded-full bg-green-500 animate-pulse'></span>
+              Active
+            </span>
           </Badge>
         );
       case "closed":
@@ -141,234 +145,201 @@ const TenderDetails: FC<TenderDetailsProps> = ({ tenderData }) => {
     }
   };
 
+  // Format dates clearly
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), "MMMM d, yyyy");
+  };
+
   return (
     <GeneralWrapper>
-      <div className='max-w-6xl mx-auto px-4 py-8'>
-        {/* Header */}
-        <div className='mb-8'>
-          <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4'>
-            <div className='flex items-center gap-2'>
-              <Hash className='h-5 w-5 text-gray-400' />
-              <span className='text-sm text-gray-500'>
-                Tender ID: {tender.tender_number}
-              </span>
-              {getStatusBadge(tender.status)}
-            </div>
+      <div className='bg-white min-h-screen'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16'>
+          {/* Header with key tender info */}
+          <div className='border-b pb-6 mb-8'>
+            <div className='flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6'>
+              <div>
+                <div className='flex items-center gap-2 mb-3'>
+                  {getStatusBadge(tender.status)}
+                  <span className='text-sm text-gray-500 flex items-center'>
+                    <Hash className='h-4 w-4 mr-1 text-gray-400' />
+                    {tender.tender_number}
+                  </span>
+                </div>
 
-            <div className='flex items-center gap-2'>
-              <Building2 className='h-5 w-5 text-gray-400' />
-              <span className='text-sm text-gray-500'>
-                {tender.company} - {tender.department}
-              </span>
-            </div>
-          </div>
+                <h1 className='text-2xl sm:text-3xl font-bold text-gray-900 mb-4'>
+                  {tender.title}
+                </h1>
 
-          <h1 className='text-2xl font-bold text-gray-900 mb-4'>
-            {tender.title}
-          </h1>
-
-          <div className='flex flex-wrap gap-4 text-sm'>
-            <div className='flex items-center gap-2'>
-              <MapPin className='h-4 w-4 text-gray-400' />
-              <span>{tender.location}</span>
-            </div>
-            <div className='flex items-center gap-2'>
-              <Briefcase className='h-4 w-4 text-gray-400' />
-              <span>Type: {tender.type}</span>
-            </div>
-            <div className='flex items-center gap-2'>
-              <Tag className='h-4 w-4 text-gray-400' />
-              <span>Category: {tender.category}</span>
-            </div>
-            <div className='flex items-center gap-2'>
-              <Banknote className='h-4 w-4 text-gray-400' />
-              <span>Value: {tender.value}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Main content */}
-        <div className='space-y-6'>
-          <Tabs
-            defaultValue='details'
-            className='w-full'>
-            <TabsList className='grid w-full grid-cols-5 mb-6'>
-              <TabsTrigger value='details'>Overview</TabsTrigger>
-              <TabsTrigger value='requirements'>Requirements</TabsTrigger>
-              <TabsTrigger value='qualifications'>Qualifications</TabsTrigger>
-              <TabsTrigger value='documents'>Documents</TabsTrigger>
-              <TabsTrigger value='dates'>Timeline</TabsTrigger>
-            </TabsList>
-
-            {/* Overview Tab */}
-            <TabsContent
-              value='details'
-              className='space-y-6'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-lg'>Description</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className='text-gray-700'>{tender.description}</p>
-                </CardContent>
-              </Card>
-
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className='text-lg'>Financial Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className='space-y-4'>
-                    <div className='flex justify-between items-center pb-3 border-b'>
-                      <span className='text-gray-600'>Tender Value</span>
-                      <span className='font-semibold text-gray-900'>
-                        {tender.value}
-                      </span>
-                    </div>
-                    <div className='flex justify-between items-center pb-3 border-b'>
-                      <span className='text-gray-600'>Document Fee</span>
-                      <span className='font-semibold text-gray-900'>
-                        {tender.doc_fee}
-                      </span>
-                    </div>
-                    <div className='flex justify-between items-center'>
-                      <span className='text-gray-600'>EMD</span>
-                      <span className='font-semibold text-gray-900'>
-                        {tender.emd}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className='text-lg'>Weightage</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='grid grid-cols-2 gap-4'>
-                      <div className='bg-blue-50 p-4 rounded-md'>
-                        <div className='text-sm font-medium text-blue-800 mb-1'>
-                          Technical
-                        </div>
-                        <div className='text-3xl font-bold text-blue-700'>
-                          {tender.tech_weightage}%
-                        </div>
-                      </div>
-                      <div className='bg-indigo-50 p-4 rounded-md'>
-                        <div className='text-sm font-medium text-indigo-800 mb-1'>
-                          Commercial
-                        </div>
-                        <div className='text-3xl font-bold text-indigo-700'>
-                          {tender.commercial_weightage}%
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className='flex items-center text-sm text-gray-600'>
+                  <Building2 className='h-4 w-4 mr-2 text-blue-600' />
+                  <span className='font-medium mr-1'>{tender.company}</span>
+                  <span className='mx-2'>•</span>
+                  <span>{tender.department}</span>
+                </div>
               </div>
-            </TabsContent>
 
-            {/* Requirements Tab */}
-            <TabsContent
-              value='requirements'
-              className='space-y-6'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-lg'>
+              <div className='shrink-0'>
+                <Link href={`/tender/buy/${tender.id}`}>
+                  <Button
+                    size='lg'
+                    className='bg-blue-600 hover:bg-blue-700 text-white shadow-sm'>
+                    Purchase Tender
+                    <ArrowRight className='ml-2 h-4 w-4' />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Key details */}
+            <div className='flex flex-wrap gap-4 mt-6'>
+              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+                <MapPin className='h-4 w-4 text-gray-500' />
+                <span className='text-sm font-medium'>{tender.location}</span>
+              </div>
+
+              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+                <Briefcase className='h-4 w-4 text-gray-500' />
+                <span className='text-sm font-medium'>{tender.type}</span>
+              </div>
+
+              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+                <Tag className='h-4 w-4 text-gray-500' />
+                <span className='text-sm font-medium'>{tender.category}</span>
+              </div>
+
+              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+                <Banknote className='h-4 w-4 text-gray-500' />
+                <span className='text-sm font-medium'>{tender.value}</span>
+              </div>
+
+              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+                <Calendar className='h-4 w-4 text-gray-500' />
+                <span className='text-sm font-medium'>
+                  Deadline: {formatDate(tender.bid_submission_end_date)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Main content - Single page layout */}
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+            <div className='lg:col-span-2 space-y-8'>
+              {/* Project Description Section */}
+              <section className='bg-white border rounded-lg p-6'>
+                <SectionHeader
+                  icon={<FileText className='h-5 w-5' />}
+                  title='Project Overview'
+                />
+                <p className='text-gray-700 leading-relaxed'>
+                  {tender.description}
+                </p>
+              </section>
+
+              {/* Pre-qualification Section */}
+              <section className='bg-white border rounded-lg p-6'>
+                <SectionHeader
+                  icon={<CheckCircle className='h-5 w-5' />}
+                  title='Pre-qualification Requirements'
+                />
+
+                <div className='mb-6'>
+                  <h3 className='text-base font-medium text-gray-800 mb-3'>
                     Pre-bid Qualifications
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className='text-gray-700'>{tender.tech_prebid_qual}</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-lg'>Required Documents</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='divide-y'>
-                    {bidderDocumentsReq.map(
-                      (doc: VendorDocRequirement, index: number) => (
-                        <div
-                          key={index}
-                          className='py-3 first:pt-0 last:pb-0'>
-                          <div className='flex justify-between items-start mb-1'>
-                            <h4 className='font-medium text-gray-900'>
-                              {doc.name}
-                            </h4>
-                            <Badge variant='outline'>{doc.format}</Badge>
-                          </div>
-                          <p className='text-sm text-gray-600'>{doc.purpose}</p>
-                        </div>
-                      )
-                    )}
+                  </h3>
+                  <div className='bg-gray-50 border border-gray-100 rounded-lg p-4'>
+                    <p className='text-gray-700'>{tender.tech_prebid_qual}</p>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                </div>
 
-            {/* Qualifications Tab */}
-            <TabsContent
-              value='qualifications'
-              className='space-y-6'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-lg'>
-                    Prequalification Criteria
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='divide-y'>
-                    {tenderPreQualification.map(
-                      (qual: TenderPrequalification, index: number) => (
-                        <div
-                          key={index}
-                          className='py-4 first:pt-0 last:pb-0'>
-                          <div className='flex justify-between items-start mb-2'>
+                <div>
+                  <h3 className='text-base font-medium text-gray-800 mb-3'>
+                    Qualification Criteria
+                  </h3>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    {tenderPreQualification.map((qual) => (
+                      <div
+                        key={qual.id}
+                        className='bg-white border border-gray-200 rounded-lg p-4'>
+                        <div className='flex items-start gap-3'>
+                          <div className='h-8 w-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5'>
+                            <span className='font-medium'>{qual.score}</span>
+                          </div>
+                          <div>
                             <h4 className='font-medium text-gray-900'>
                               {qual.title}
                             </h4>
-                            <Badge>Score: {qual.score}</Badge>
+                            <p className='text-sm text-gray-600 mt-1'>
+                              {qual.description}
+                            </p>
                           </div>
-                          <p className='text-sm text-gray-700'>
-                            {qual.description}
-                          </p>
                         </div>
-                      )
-                    )}
+                      </div>
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                </div>
+              </section>
 
-            {/* Documents Tab */}
-            <TabsContent
-              value='documents'
-              className='space-y-6'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-lg'>Support Documents</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='space-y-4'>
-                    {tenderSupportDocuments?.map(
-                      (doc: TenderSupportDocument, index: number) => (
-                        <div
-                          key={index}
-                          className='flex items-center justify-between border border-gray-200 rounded-md p-3'>
-                          <div className='flex-1'>
-                            <div className='font-medium text-gray-900 mb-1'>
+              {/* Required Documents Section */}
+              <section className='bg-white border rounded-lg p-6'>
+                <SectionHeader
+                  icon={<FileCheck className='h-5 w-5' />}
+                  title='Document Requirements'
+                />
+
+                <div className='mb-6'>
+                  <h3 className='text-base font-medium text-gray-800 mb-3'>
+                    Required Documents
+                  </h3>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    {bidderDocumentsReq.map((doc, index) => (
+                      <div
+                        key={doc.id}
+                        className='border border-gray-100 rounded-lg overflow-hidden'>
+                        <div className='bg-gray-50 px-4 py-3 border-b'>
+                          <div className='flex justify-between items-center'>
+                            <h4 className='font-medium text-gray-900 flex items-center'>
+                              <span className='h-6 w-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-2 text-xs'>
+                                {index + 1}
+                              </span>
                               {doc.name}
-                            </div>
-                            <div className='text-sm text-gray-600'>
-                              {doc.purpose}
-                            </div>
+                            </h4>
+                            <Badge
+                              variant='outline'
+                              className='bg-blue-50 text-blue-700'>
+                              {doc.format}
+                            </Badge>
                           </div>
+                        </div>
+                        <div className='p-4'>
+                          <p className='text-sm text-gray-600'>{doc.purpose}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className='text-base font-medium text-gray-800 mb-3'>
+                    Support Documents
+                  </h3>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    {tenderSupportDocuments?.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className='bg-white border border-gray-100 rounded-lg overflow-hidden'>
+                        <div className='p-4 border-b bg-gray-50'>
+                          <h3 className='font-medium text-gray-900 truncate'>
+                            {doc.name}
+                          </h3>
+                        </div>
+                        <div className='p-4'>
+                          <p className='text-sm text-gray-600 mb-4 line-clamp-2'>
+                            {doc.purpose}
+                          </p>
                           <Button
                             variant='outline'
                             size='sm'
+                            className='w-full flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-colors'
                             asChild>
                             <a
                               href={doc.doc_url}
@@ -378,79 +349,146 @@ const TenderDetails: FC<TenderDetailsProps> = ({ tenderData }) => {
                             </a>
                           </Button>
                         </div>
-                      )
-                    )}
+                      </div>
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                </div>
+              </section>
+            </div>
 
-            {/* Timeline Tab */}
-            <TabsContent
-              value='dates'
-              className='space-y-6'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-lg'>Important Dates</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='space-y-0'>
-                    <DateDisplay
-                      label='Pre-publish Date'
-                      date={tender.pre_publish_date}
-                    />
-                    <DateDisplay
-                      label='Publish Date'
-                      date={tender.publish_date}
-                    />
-                    <DateDisplay
-                      label='Sale Close Date'
-                      date={tender.sale_close_date}
-                    />
-                    <DateDisplay
-                      label='Clarification Start Date'
-                      date={tender.clarification_start_date}
-                    />
-                    <DateDisplay
-                      label='Clarification End Date'
-                      date={tender.clarification_end_date}
-                    />
-                    <DateDisplay
-                      label='Bid Submission End Date'
-                      date={tender.bid_submission_end_date}
-                    />
-                    <DateDisplay
-                      label='Bid Open Date'
-                      date={tender.bid_open_date}
-                    />
+            <div>
+              {/* Financial Details Section */}
+              <section className='bg-white border rounded-lg p-6 mb-6'>
+                <SectionHeader
+                  icon={<Banknote className='h-5 w-5' />}
+                  title='Financial Details'
+                />
+                <div className='space-y-3'>
+                  <div className='flex justify-between py-2 border-b'>
+                    <span className='text-gray-600'>Tender Value</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.value}
+                    </span>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+                  <div className='flex justify-between py-2 border-b'>
+                    <span className='text-gray-600'>Document Fee</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.doc_fee}
+                    </span>
+                  </div>
+                  <div className='flex justify-between py-2 border-b'>
+                    <span className='text-gray-600'>EMD</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.emd}
+                    </span>
+                  </div>
+                  <div className='flex justify-between py-2 border-b'>
+                    <span className='text-gray-600'>EMD Payable At</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.edm_payable_at}
+                    </span>
+                  </div>
+                  <div className='flex justify-between py-2'>
+                    <span className='text-gray-600'>Fee Payable At</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.fee_payable_at}
+                    </span>
+                  </div>
+                </div>
+              </section>
 
-        {/* Action button */}
-        {isLoggedIn && (
-          <div className='mt-10 border-t border-gray-200 pt-6'>
-            <div className='flex flex-col md:flex-row items-center justify-between gap-4'>
-              <div>
-                <h3 className='text-lg font-semibold text-gray-900 mb-1'>
-                  Ready to submit your bid?
-                </h3>
-                <p className='text-gray-600'>
-                  Purchase this tender document to participate in bidding.
-                </p>
-              </div>
-              <Link href={`/tender/buy/${tender.id}`}>
-                <Button className='bg-primary hover:bg-primary/90 text-white'>
-                  Purchase Tender
-                  <ArrowRight className='ml-2 h-4 w-4' />
-                </Button>
-              </Link>
+              {/* Evaluation Section */}
+              <section className='bg-white border rounded-lg p-6 mb-6'>
+                <SectionHeader
+                  icon={<Star className='h-5 w-5' />}
+                  title='Evaluation Criteria'
+                />
+                <div className='space-y-4'>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-gray-600'>Technical</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.tech_weightage}%
+                    </span>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-gray-600'>Commercial</span>
+                    <span className='font-medium text-gray-900'>
+                      {tender.commercial_weightage}%
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+              {/* Timeline Section */}
+              <section className='bg-white border rounded-lg p-6'>
+                <SectionHeader
+                  icon={<Calendar className='h-5 w-5' />}
+                  title='Important Dates'
+                />
+
+                <div className='space-y-4'>
+                  <div>
+                    <h4 className='font-medium text-gray-900'>
+                      Submission Deadline
+                    </h4>
+                    <p className='text-red-600 font-medium mt-1'>
+                      {formatDate(tender.bid_submission_end_date)}
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div className='space-y-3'>
+                    <div className='flex justify-between'>
+                      <span className='text-gray-600'>Publish Date</span>
+                      <span className='font-medium text-gray-900'>
+                        {formatDate(tender.publish_date)}
+                      </span>
+                    </div>
+                    <div className='flex justify-between'>
+                      <span className='text-gray-600'>Sale Close Date</span>
+                      <span className='font-medium text-gray-900'>
+                        {formatDate(tender.sale_close_date)}
+                      </span>
+                    </div>
+                    <div className='flex justify-between'>
+                      <span className='text-gray-600'>Clarification Start</span>
+                      <span className='font-medium text-gray-900'>
+                        {formatDate(tender.clarification_start_date)}
+                      </span>
+                    </div>
+                    <div className='flex justify-between'>
+                      <span className='text-gray-600'>Clarification End</span>
+                      <span className='font-medium text-gray-900'>
+                        {formatDate(tender.clarification_end_date)}
+                      </span>
+                    </div>
+                    <div className='flex justify-between'>
+                      <span className='text-gray-600'>Bid Open Date</span>
+                      <span className='font-medium text-gray-900'>
+                        {formatDate(tender.bid_open_date)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call to action */}
+                <div className='mt-8 bg-blue-50 border border-blue-100 rounded-lg p-4'>
+                  <p className='text-sm text-blue-800 mb-4'>
+                    Ready to participate? Purchase this tender document to
+                    access all required information and guidelines.
+                  </p>
+                  <Link href={`/tender/buy/${tender.id}`}>
+                    <Button className='w-full bg-blue-600 hover:bg-blue-700 text-white'>
+                      Purchase Tender
+                      <ArrowRight className='ml-2 h-4 w-4' />
+                    </Button>
+                  </Link>
+                </div>
+              </section>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </GeneralWrapper>
   );

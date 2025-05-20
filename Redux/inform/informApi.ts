@@ -1,22 +1,15 @@
-import { api } from "../api";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const notificationApi = api.injectEndpoints({
+export const informApi = createApi({
+  reducerPath: "informApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: `${process.env.NEXT_PUBLIC_EMAIL_SERVER_URL}`,
+    credentials: "include" as const,
+  }),
   endpoints: (builder) => ({
-    getNotifications: builder.query({
-      query: () => ({
-        url: "/notification",
-        method: "GET",
-      }),
-    }),
-    markAllNotificationsAsRead: builder.mutation({
-      query: () => ({
-        url: "/notification/mark-all-read",
-        method: "POST",
-      }),
-    }),
-    sendCustomMail: builder.mutation({
+    sendMail: builder.mutation({
       query: (data) => ({
-        url: "/inform/send-custom-mail",
+        url: "/welcome",
         method: "POST",
         body: data,
       }),
@@ -24,8 +17,4 @@ const notificationApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetNotificationsQuery,
-  useMarkAllNotificationsAsReadMutation,
-  useSendCustomMailMutation,
-} = notificationApi;
+export const { useSendMailMutation } = informApi;

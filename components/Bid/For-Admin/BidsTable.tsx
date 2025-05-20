@@ -12,7 +12,7 @@ import {
 import { Eye, Star } from "lucide-react";
 import Link from "next/link";
 import { capitalizeFirstLetter } from "@/lib/helper";
-import { IBidsResponse } from "@/app/Types/Bid-Types";
+import { IBidsResponse } from "@/Types/Bid-Types";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 

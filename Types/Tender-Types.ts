@@ -91,6 +91,12 @@ export interface ISavedTenderCard {
   title: string;
   updatedAt: string;
 }
+export interface ISavedTender {
+  hasMore: boolean;
+  page: number;
+  savedTenders: ISavedTenderCard[];
+  success: boolean;
+}
 
 export interface IAllTenderCard {
   id: number;
@@ -105,4 +111,34 @@ export interface IAllTenderCard {
   scope: string;
   category: string;
   location: string;
+}
+
+export interface ITenderSupportDocResponse {
+  name: string;
+  purpose: string;
+  doc_s3_name: string;
+}
+
+export interface IBidderDocumentsReqResponse {
+  name: string;
+  format: string;
+  purpose: string;
+}
+
+export interface ITenderPreQualificationResponse {
+  title: string;
+  description: string;
+  score: string;
+}
+
+export interface ITenderVendorSelection {
+  selectedVendors: string[];
+  selectedCategories: string[];
+}
+
+export interface ILiveTenders {
+  hasMore: boolean;
+  page: number;
+  tenders: IAllTenderCard[];
+  success: boolean;
 }

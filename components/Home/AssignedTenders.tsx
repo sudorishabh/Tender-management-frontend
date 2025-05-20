@@ -4,7 +4,7 @@ import TenderCardSkeleton from "../Shared/skeleton/TenderCardSkeleton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 import TenderCard from "../Tender/TenderCard";
-import { ITenderCard } from "@/app/Types/Tender-Types";
+import { ITenderCard } from "@/Types/Tender-Types";
 import { cn } from "@/lib/utils";
 import { borderStyle } from "@/app/Styles";
 import InfiniteScroll from "../Shared/InfiniteScroll";

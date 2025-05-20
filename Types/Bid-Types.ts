@@ -40,3 +40,10 @@ export interface IBidsResponse {
   success: boolean;
   bids: IBidTableRow[];
 }
+
+export interface IBidsOnTenderResponse {
+  hasMore: boolean;
+  page: number;
+  bids: IBidCard[];
+  success: boolean;
+}

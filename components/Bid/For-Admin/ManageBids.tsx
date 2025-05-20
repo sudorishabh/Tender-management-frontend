@@ -1,33 +1,24 @@
-"use client";
 import { Button } from "@/components/ui/button";
-import { useDeleteBidsMutation, useGetAllBidsQuery } from "@/Redux/bid/bidApi";
 import { LoaderCircle, Trash, Receipt, SearchX, Building } from "lucide-react";
-import React, { useState } from "react";
+import React, { FC } from "react";
 import BidsTable from "@/components/Bid/For-Admin/BidsTable";
-import { toast } from "sonner";
-import PageError from "@/components/Shared/PageError";
+import { IBidsResponse } from "@/Types/Bid-Types";
 
-const ManageBids = () => {
-  const [isBidDelete, setIsBidDelete] = useState<string[]>([]);
-  const { data, isLoading, isError } = useGetAllBidsQuery({});
-  const [deleteBids, { isLoading: deletingMultiple }] = useDeleteBidsMutation();
+interface Props {
+  data: IBidsResponse;
+  handleDeleteBids: () => void;
+  deletingMultiple: boolean;
+  isBidDelete: string[];
+  setIsBidDelete: (isBidDelete: string[]) => void;
+}
 
-  async function handleDeleteBids() {
-    try {
-      const deleted = await deleteBids(isBidDelete).unwrap();
-      if (deleted.success) {
-        toast.success("Bids Deleted Successfully");
-        setIsBidDelete([]);
-      }
-    } catch {
-      toast.error("Error Deleting Bids");
-    }
-  }
-
-  if (isError) {
-    return <PageError message='Error fetching bids' />;
-  }
-
+const ManageBids: FC<Props> = ({
+  data,
+  handleDeleteBids,
+  deletingMultiple,
+  isBidDelete,
+  setIsBidDelete,
+}) => {
   return (
     <div>
       <div className='w-full bg-white border-b mb-8'>
@@ -76,14 +67,7 @@ const ManageBids = () => {
             </div>
           </div>
 
-          {isLoading ? (
-            <div className='bg-white p-20 flex flex-col items-center justify-center'>
-              <LoaderCircle
-                className='animate-spin mb-4 text-primary'
-                size={36}
-              />
-            </div>
-          ) : data?.bids?.length ? (
+          {data?.bids?.length ? (
             <BidsTable
               data={data}
               setIsBidDelete={setIsBidDelete}

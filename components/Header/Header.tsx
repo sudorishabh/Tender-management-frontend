@@ -1,4 +1,5 @@
 "use client";
+
 import { RootState } from "@/Redux/store";
 import Link from "next/link";
 import { useSelector } from "react-redux";
@@ -10,7 +11,6 @@ import {
   secondaryButtonStyle,
 } from "@/app/Styles";
 import Image from "next/image";
-import logo from "@/public/TERI_50.png";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import SearchResultBox from "./SearchResultBox";
@@ -35,13 +35,15 @@ const Header = () => {
           <Link
             href='/'
             className='flex items-center gap-2'>
-            <Image
-              src={logo}
-              alt='TERI Logo'
-              height={30}
-              width={30}
-            />
-            <span className='text-2xl text-primary font-bold'>TERI</span>
+            <span>
+              <Image
+                src='/TERI_LOGO.png'
+                alt='TERI Logo'
+                height={120}
+                width={120}
+                className='w-12 h-11'
+              />
+            </span>
           </Link>
 
           <SearchResultBox />

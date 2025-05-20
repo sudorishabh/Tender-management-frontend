@@ -3,7 +3,7 @@ import {
   ISavedTenderCard,
   ITenderCard,
   IAllTenderCard,
-} from "@/app/Types/Tender-Types";
+} from "@/Types/Tender-Types";
 
 interface LiveTenderResponse {
   success: boolean;
@@ -42,6 +42,7 @@ const tenderApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["SavedTenders"],
     }),
 
     getLiveTenders: builder.query<
@@ -132,6 +133,7 @@ const tenderApi = api.injectEndpoints({
         url: `/tender/saved-tenders?page=${page}&limit=${limit}`,
         method: "GET",
       }),
+      providesTags: ["SavedTenders"],
       serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
         return endpointName;
       },
@@ -191,11 +193,20 @@ const tenderApi = api.injectEndpoints({
         return currentArg?.page !== previousArg?.page;
       },
     }),
+
     getSearchResults: builder.query({
       query: (query) => ({
         url: `/tender/search?query=${query}`,
         method: "GET",
       }),
+    }),
+
+    deleteSavedTender: builder.mutation({
+      query: (id) => ({
+        url: `/tender/delete-saved/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["SavedTenders"],
     }),
   }),
 });
@@ -210,6 +221,7 @@ export const {
   useGetSavedTendersQuery,
   useGetAssignedTendersQuery,
   useGetSearchResultsQuery,
+  useDeleteSavedTenderMutation,
 } = tenderApi;
 
 export default tenderApi.reducer;

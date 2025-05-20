@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import InfoCard from "@/components/Shared/InfoCard";
-import { ITenderCard } from "@/app/Types/Tender-Types";
+import { ITenderCard } from "@/Types/Tender-Types";
 
 const QualifiedTenders = () => {
   const [searchQuery, setSearchQuery] = useState("");

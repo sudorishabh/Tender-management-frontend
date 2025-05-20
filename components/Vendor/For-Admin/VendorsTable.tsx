@@ -10,7 +10,7 @@ import { Eye, FilePenLine } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
 import { capitalizeFirstLetter } from "@/lib/helper";
-import { IVendorsTable } from "@/app/Types/Vender-Types";
+import { IVendorsTable } from "@/Types/Vendor-Types";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import InfiniteScroll from "@/components/Shared/InfiniteScroll";

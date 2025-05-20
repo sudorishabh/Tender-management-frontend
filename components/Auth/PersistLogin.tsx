@@ -1,5 +1,5 @@
 "use client";
-import { ApiError } from "@/app/Types";
+import { ApiError } from "@/Types";
 import { ErrorCodes } from "@/lib/errorCodes";
 import { useRefreshTokenQuery } from "@/Redux/auth/authApi";
 import { setIsRefreshing, setUser } from "@/Redux/auth/authSlice";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 interface Props {
   children: React.ReactNode;
 }
-const PersistentUser: FC<Props> = ({ children }) => {
+const PersistLogin: FC<Props> = ({ children }) => {
   const { data, isSuccess, isLoading, isError, error } = useRefreshTokenQuery(
     {}
   );
@@ -35,4 +35,4 @@ const PersistentUser: FC<Props> = ({ children }) => {
   return children;
 };
 
-export default PersistentUser;
+export default PersistLogin;

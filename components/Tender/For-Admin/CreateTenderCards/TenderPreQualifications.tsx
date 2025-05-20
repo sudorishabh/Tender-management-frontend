@@ -24,13 +24,13 @@ import InfoCard from "@/components/Shared/InfoCard";
 
 interface Props {
   setActive: (active: number) => void;
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
 const TenderPreQualifications: FC<Props> = ({
   setActive,
-  onSave,
+  handleSaveTender,
   isSavingTender,
 }) => {
   const {
@@ -88,7 +88,7 @@ const TenderPreQualifications: FC<Props> = ({
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}

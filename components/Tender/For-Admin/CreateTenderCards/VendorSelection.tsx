@@ -32,10 +32,12 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useGetVendorsForSelectionQuery } from "@/Redux/vendor/vendorApi";
+import { ICategoryName } from "@/Types/Category-Types";
+import { capitalizeFirstLetter } from "@/lib/helper";
 
 interface Props {
   setActive: (active: number) => void;
-  categoriesData: { id: string; name: string }[];
+  categoriesData: ICategoryName[];
   vendorSelection: {
     selectedVendors: string[];
     selectedCategories: string[];
@@ -44,7 +46,7 @@ interface Props {
     selectedVendors: string[];
     selectedCategories: string[];
   }) => void;
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
@@ -62,7 +64,7 @@ const VendorSelection: FC<Props> = ({
   categoriesData,
   vendorSelection,
   setVendorSelection,
-  onSave,
+  handleSaveTender,
   isSavingTender,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -166,7 +168,7 @@ const VendorSelection: FC<Props> = ({
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}
@@ -269,7 +271,7 @@ const VendorSelection: FC<Props> = ({
                             )}
                             className='mr-2'
                           />
-                          <span>{category.name}</span>
+                          <span>{capitalizeFirstLetter(category.name)}</span>
                         </div>
                       ))}
                     </div>
@@ -391,7 +393,9 @@ const VendorSelection: FC<Props> = ({
                           </div>
                         </TableCell>
                         <TableCell>{vendor.email}</TableCell>
-                        <TableCell>{vendor.categoryName}</TableCell>
+                        <TableCell>
+                          {capitalizeFirstLetter(vendor.categoryName)}
+                        </TableCell>
                       </TableRow>
                     );
                   })

@@ -1,5 +1,4 @@
-"use client";
-import { FC, useState, useEffect } from "react";
+import { FC } from "react";
 import {
   FileText,
   Building,
@@ -18,42 +17,18 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  useGetBidByIdQuery,
-  useUpdateBidScoreMutation,
-  useSetBidStatusMutation,
-} from "@/Redux/bid/bidApi";
 import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
 import { format } from "date-fns";
-import { toast } from "sonner";
 import PdfViewerModal from "@/components/Shared/PdfViewerModal";
-import { useRouter } from "next/navigation";
-import PageLoading from "@/components/Shared/PageLoading";
 import BidStatusConfirmDialog from "@/components/Bid/For-Admin/BidStatusConfirmDialog";
-import { ApiError } from "@/app/Types";
-import { ErrorCodes } from "@/lib/errorCodes";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { rejectionTemplates } from "@/lib/constants";
+
 import InfoCard from "@/components/Shared/InfoCard";
 import { primaryButtonStyle, secondaryButtonStyle2 } from "@/app/Styles";
-import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
+import { useSelector } from "react-redux";
 
+import RejectBidDialog from "./RejectBidDialog";
+import { NextRouter } from "next/router";
 interface DetailItemProps {
   label: string;
   value: string | null | undefined;
@@ -110,159 +85,149 @@ const ScoreInput: FC<ScoreInputProps> = ({
   );
 };
 
-interface Props {
-  bidId: string;
+interface IBidDetailsResponse {
+  bidsDetails: {
+    bidData: {
+      bank_branch: string;
+      bank_number: string;
+      created_at: string;
+      dd_date: string;
+      dd_number: string;
+      financial_doc_s3_name: string;
+      financial_score: string;
+      id: number;
+      optional_info: null | string;
+      ranking: number;
+      rejection_message: null | string;
+      status: string;
+      technical_doc_s3_name: string;
+      technical_score: string;
+      tender_id: number;
+      total_score: string;
+      updated_at: string;
+      vendor_id: number;
+    };
+    businessData: {
+      address_line1: string;
+      address_line2: string;
+      annual_turnover: string;
+      business_classification: string;
+      business_name: string;
+      city: string;
+      company_email: string;
+      company_phone: string;
+      country: string;
+      created_at: string;
+      employee_count: number | null;
+      established_year: string;
+      gst_number: string | null;
+      id: number;
+      locality: string;
+      msme_certificate_s3_name: string;
+      pin_code: string;
+      registration_doc_s3_name: string;
+      registration_number: string;
+      state: string;
+      updated_at: string;
+      user_id: number;
+      website: string;
+    };
+    tenderData: {
+      bid_open_date: string;
+      bid_submission_end_date: string;
+      category: string;
+      clarification_end_date: string;
+      clarification_start_date: string;
+      commercial_weightage: string;
+      company: string;
+      created_at: string;
+      created_by: number;
+      department: string;
+      description: string;
+      doc_fee: string;
+      emd: string;
+      emd_payable_at: string;
+      fee_payable_at: string;
+      id: number;
+      location: string;
+      pre_publish_date: string;
+      publish_date: string;
+      revision_publishment_date: string;
+      sale_close_date: string;
+      scope: string;
+      select_all: boolean;
+      status: string;
+      tech_prebid_qual: string;
+      tech_weightage: string;
+      tender_number: string;
+      title: string;
+      type: string;
+      updated_at: string;
+      value: string;
+    };
+    vendorData: {
+      alternate_contact: string | null;
+      contact_number: string;
+      created_at: string;
+      full_name: string;
+      id: number;
+      pan_card_doc_s3_name: string;
+      pan_card_number: string;
+      profile_image_s3_name: string | null;
+      rejection_reason: string | null;
+      status: string;
+      updated_at: string;
+      user_id: number;
+    };
+  };
 }
-const BidDetails: FC<Props> = ({ bidId }) => {
-  const [technicalScore, setTechnicalScore] = useState<number>(0);
-  const [financialScore, setFinancialScore] = useState<number>(0);
-  const [previousTechnicalScore, setPreviousTechnicalScore] =
-    useState<number>(0);
-  const [previousFinancialScore, setPreviousFinancialScore] =
-    useState<number>(0);
-  const [updateBidScore, { isLoading: isUpdatingScore }] =
-    useUpdateBidScoreMutation();
-  const [setBidStatus, { isLoading: isSettingBidStatus }] =
-    useSetBidStatusMutation();
-  const [confirmDialog, setConfirmDialog] = useState<{
+
+interface Props {
+  handleTechnicalScoreChange: (newScore: number) => void;
+  handleFinancialScoreChange: (newScore: number) => void;
+  handleUpdateStatus: (status: "selected" | "rejected") => void;
+  confirmSetBidStatus: () => void;
+  confirmRejectBid: () => void;
+  handleSelectTemplate: (template: string) => void;
+  isUpdatingScore: boolean;
+  isSettingBidStatus: boolean;
+  data: IBidDetailsResponse;
+  setRejectDialog: (rejectDialog: { isOpen: boolean; message: string }) => void;
+  rejectDialog: { isOpen: boolean; message: string };
+  setConfirmDialog: (confirmDialog: {
     isOpen: boolean;
     status: string;
-  }>({
-    isOpen: false,
-    status: "",
-  });
-  const [rejectDialog, setRejectDialog] = useState<{
-    isOpen: boolean;
-    message: string;
-  }>({
-    isOpen: false,
-    message: "",
-  });
-  // Template rejection messages
+  }) => void;
+  confirmDialog: { isOpen: boolean; status: string };
+  technicalScore: number;
+  financialScore: number;
+  router: NextRouter;
+}
 
-  const router = useRouter();
+const BidDetails: FC<Props> = ({
+  handleTechnicalScoreChange,
+  handleFinancialScoreChange,
+  handleUpdateStatus,
+  confirmSetBidStatus,
+  confirmRejectBid,
+  handleSelectTemplate,
+  isUpdatingScore,
+  isSettingBidStatus,
+  data,
+  setRejectDialog,
+  rejectDialog,
+  setConfirmDialog,
+  confirmDialog,
+  technicalScore,
+  financialScore,
+  router,
+}) => {
   const {
     user: { role },
   } = useSelector((state: RootState) => state.authSlice);
-  const { data, isLoading: isLoadingBid } = useGetBidByIdQuery(bidId);
-
-  useEffect(() => {
-    if (data?.bidsDetails) {
-      const { bidData } = data.bidsDetails;
-      const techScore = Math.min(Math.abs(bidData?.technical_score || 0), 5);
-      const finScore = Math.min(Math.abs(bidData?.financial_score || 0), 5);
-      setTechnicalScore(techScore);
-      setFinancialScore(finScore);
-      setPreviousTechnicalScore(techScore);
-      setPreviousFinancialScore(finScore);
-    }
-  }, [data]);
-
-  if (isLoadingBid) {
-    return <PageLoading />;
-  }
 
   const { bidData, tenderData, vendorData, businessData } =
     data?.bidsDetails || {};
-
-  const handleTechnicalScoreChange = async (newScore: number) => {
-    setPreviousTechnicalScore(technicalScore);
-    setTechnicalScore(newScore);
-    try {
-      await updateBidScore({
-        bidId,
-        technicalScore: newScore,
-        financialScore,
-      }).unwrap();
-      toast.success("Technical score updated successfully");
-    } catch (error) {
-      setTechnicalScore(previousTechnicalScore);
-      toast.error("Failed to update technical score");
-      console.error("Error updating technical score:", error);
-    }
-  };
-
-  const handleFinancialScoreChange = async (newScore: number) => {
-    setPreviousFinancialScore(financialScore);
-    setFinancialScore(newScore);
-    try {
-      await updateBidScore({
-        bidId,
-        technicalScore,
-        financialScore: newScore,
-      }).unwrap();
-      toast.success("Financial score updated successfully");
-    } catch (error) {
-      setFinancialScore(previousFinancialScore);
-      toast.error("Failed to update financial score");
-      console.error("Error updating financial score:", error);
-    }
-  };
-
-  const handleUpdateStatus = (status: "selected" | "rejected") => {
-    if (status === "selected") {
-      setConfirmDialog({
-        isOpen: true,
-        status,
-      });
-    } else if (status === "rejected") {
-      setRejectDialog({
-        isOpen: true,
-        message: "",
-      });
-    }
-  };
-
-  const confirmSetBidStatus = async () => {
-    try {
-      await setBidStatus({
-        bidId,
-        status: confirmDialog.status,
-      }).unwrap();
-      toast.success(`Bid ${confirmDialog.status.toLowerCase()} successfully`);
-      setConfirmDialog({ ...confirmDialog, isOpen: false });
-    } catch (error) {
-      const apiError = error as ApiError;
-      if (apiError?.data?.errorCode && ErrorCodes[apiError.data.errorCode]) {
-        toast.error(ErrorCodes[apiError.data.errorCode]);
-      } else {
-        toast.error(`Failed to ${confirmDialog.status.toLowerCase()} bid`);
-        console.error(
-          `Error updating status to ${confirmDialog.status}:`,
-          error
-        );
-      }
-      setConfirmDialog({ ...confirmDialog, isOpen: false });
-    }
-  };
-
-  const handleSelectTemplate = (template: string) => {
-    setRejectDialog({ ...rejectDialog, message: template });
-  };
-
-  const confirmRejectBid = async () => {
-    if (!rejectDialog.message.trim()) {
-      toast.error("Please provide a rejection reason");
-      return;
-    }
-    try {
-      await setBidStatus({
-        bidId,
-        status: "rejected",
-        message: rejectDialog.message,
-      }).unwrap();
-      toast.success("Bid rejected successfully");
-      setRejectDialog({ ...rejectDialog, isOpen: false });
-    } catch (error) {
-      const apiError = error as ApiError;
-      if (apiError?.data?.errorCode && ErrorCodes[apiError.data.errorCode]) {
-        toast.error(ErrorCodes[apiError.data.errorCode]);
-      } else {
-        toast.error("Failed to reject bid");
-        console.error("Error rejecting bid:", error);
-      }
-    }
-  };
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -448,7 +413,7 @@ const BidDetails: FC<Props> = ({ bidId }) => {
                   />
                   <DetailItem
                     label='Organization'
-                    value={tenderData?.organization}
+                    value={tenderData?.company}
                     className='mb-3'
                   />
                   <DetailItem
@@ -500,7 +465,7 @@ const BidDetails: FC<Props> = ({ bidId }) => {
                       )}
                       <div className='flex items-center gap-2 text-xs text-gray-500 mt-1'>
                         <span className='bg-gray-100 px-2 py-1 rounded'>
-                          {bidData?.technical_doc_url
+                          {bidData?.technical_doc_s3_name
                             ? "Document uploaded"
                             : "No document"}
                         </span>
@@ -566,7 +531,7 @@ const BidDetails: FC<Props> = ({ bidId }) => {
 
                       <div className='flex items-center gap-2 text-xs text-gray-500 mt-1'>
                         <span className='bg-gray-100 px-2 py-1 rounded'>
-                          {bidData?.financial_doc_url
+                          {bidData?.financial_doc_s3_name
                             ? "Document uploaded"
                             : "No document"}
                         </span>
@@ -754,74 +719,13 @@ const BidDetails: FC<Props> = ({ bidId }) => {
       </div>
 
       {/* Rejection Dialog */}
-      <Dialog
-        open={rejectDialog.isOpen}
-        onOpenChange={(isOpen) => setRejectDialog({ ...rejectDialog, isOpen })}>
-        <DialogContent className='sm:max-w-md'>
-          <DialogHeader>
-            <DialogTitle>Reject Bid</DialogTitle>
-            <DialogDescription>
-              Please provide a reason for rejecting this bid. This message will
-              be visible to the vendor.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className='space-y-4 py-4'>
-            <div className='space-y-2'>
-              <p className='text-sm font-medium'>Select a template message</p>
-              <Select onValueChange={handleSelectTemplate}>
-                <SelectTrigger>
-                  <SelectValue placeholder='Choose a template' />
-                </SelectTrigger>
-                <SelectContent>
-                  {rejectionTemplates.map((template, index) => (
-                    <SelectItem
-                      key={index}
-                      value={template}>
-                      {template.length > 50
-                        ? `${template.substring(0, 50)}...`
-                        : template}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className='space-y-2'>
-              <p className='text-sm font-medium'>Rejection message</p>
-              <Textarea
-                placeholder='Explain why this bid is being rejected...'
-                value={rejectDialog.message}
-                onChange={(e) =>
-                  setRejectDialog({ ...rejectDialog, message: e.target.value })
-                }
-                rows={4}
-                className='resize-none'
-              />
-            </div>
-          </div>
-
-          <DialogFooter className='sm:justify-between'>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() =>
-                setRejectDialog({ ...rejectDialog, isOpen: false })
-              }>
-              Cancel
-            </Button>
-            <Button
-              type='button'
-              variant='destructive'
-              className='gap-1'
-              onClick={confirmRejectBid}
-              disabled={isSettingBidStatus || !rejectDialog.message.trim()}>
-              <ThumbsDown className='h-4 w-4' />
-              {isSettingBidStatus ? "Processing..." : "Reject Bid"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <RejectBidDialog
+        handleSelectTemplate={handleSelectTemplate}
+        confirmRejectBid={confirmRejectBid}
+        isSettingBidStatus={isSettingBidStatus}
+        rejectDialog={rejectDialog}
+        setRejectDialog={setRejectDialog}
+      />
 
       <BidStatusConfirmDialog
         isOpen={confirmDialog.isOpen}

@@ -8,10 +8,10 @@ import { toast } from "sonner";
 import { FileText, LoaderCircle, Building, FileUp, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDeleteFileUrlMutation } from "@/Redux/s3-files/s3-files-Api";
-import { IVenderRegistrationForm } from "@/app/Types/User-Types";
+import { IVenderRegistrationForm } from "@/Types/User-Types";
 import useUploadFileToS3 from "@/hooks/useUploadFileToS3";
 import { ErrorCodes } from "@/lib/errorCodes";
-import { ApiError } from "@/app/Types";
+import { ApiError } from "@/Types";
 
 const VenderRegistration = () => {
   const [active, setActive] = useState(0);

@@ -9,6 +9,11 @@ export const businessClassification = [
   "Other",
 ];
 
+export const ROLES = {
+  ADMIN: "admin",
+  VENDOR: "vendor",
+};
+
 export const departments = [
   { key: "administration", label: "Administration" },
   { key: "human_resources", label: "Human Resources" },

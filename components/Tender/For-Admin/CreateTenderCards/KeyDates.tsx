@@ -30,7 +30,7 @@ import InfoCard from "@/components/Shared/InfoCard";
 
 interface Props {
   setActive: (active: number) => void;
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
@@ -133,7 +133,11 @@ const keyDateDescriptions = [
   },
 ];
 
-const KeyDates: FC<Props> = ({ setActive, onSave, isSavingTender }) => {
+const KeyDates: FC<Props> = ({
+  setActive,
+  handleSaveTender,
+  isSavingTender,
+}) => {
   const {
     setValue,
     watch,
@@ -170,7 +174,7 @@ const KeyDates: FC<Props> = ({ setActive, onSave, isSavingTender }) => {
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}

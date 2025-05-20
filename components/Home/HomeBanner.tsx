@@ -6,7 +6,6 @@ import { ChevronRight } from "lucide-react";
 const HomeBanner = () => {
   return (
     <div className='relative mb-6 overflow-hidden rounded-xl bg-gradient-to-r from-accent to-accent'>
-      {/* Decorative elements */}
       <div className='absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-10'></div>
       <div className='absolute bottom-0 left-0 h-48 w-48 -translate-x-1/4 translate-y-1/4 rounded-full bg-white opacity-10'></div>
       <div className='absolute top-1/2 left-1/4 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-5'></div>
@@ -48,7 +47,6 @@ const HomeBanner = () => {
         </div>
       </div>
 
-      {/* Bottom wave pattern */}
       <div className='absolute bottom-0 left-0 right-0'>
         <svg
           xmlns='http://www.w3.org/2000/svg'

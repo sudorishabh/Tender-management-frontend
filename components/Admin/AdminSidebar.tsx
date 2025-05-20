@@ -105,9 +105,7 @@ export function AdminSidebar() {
                 RN
               </AvatarFallback>
             </Avatar>
-            <p className='font-semibold text-gray-800 text-base'>
-              Rishabh Negi
-            </p>
+            <p className='font-semibold text-gray-800 text-base'>Teri</p>
             <span className='text-sm text-gray-500'>Administrator</span>
           </div>
           {/* <Separator className='mt-2' /> */}

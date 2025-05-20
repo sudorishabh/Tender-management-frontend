@@ -1,15 +1,16 @@
-import { ISavedTenderCard } from "@/app/Types/Tender-Types";
+import { ISavedTenderCard } from "@/Types/Tender-Types";
 import { Edit } from "lucide-react";
 import { Calendar, FileText, Tag } from "lucide-react";
 import { Trash } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { FC } from "react";
 
-const savedTenderCard = ({
-  savedTender,
-}: {
+interface Props {
   savedTender: ISavedTenderCard;
-}) => {
+  handleConfirmDelete: (id: number) => void;
+}
+
+const savedTenderCard: FC<Props> = ({ savedTender, handleConfirmDelete }) => {
   return (
     <div
       key={savedTender.id}
@@ -60,7 +61,9 @@ const savedTenderCard = ({
           <Edit className='size-4 mr-2 text-green-600' />
           Edit
         </Link>
-        <button className='flex-1 p-3 text-gray-700 flex items-center justify-center text-sm hover:bg-gray-100 hover:text-red-600 transition-colors'>
+        <button
+          onClick={() => handleConfirmDelete(savedTender.id)}
+          className='flex-1 p-3 text-gray-700 flex items-center justify-center text-sm hover:bg-gray-100 hover:text-red-600 transition-colors'>
           <Trash className='size-4 mr-2 text-red-500' />
           Delete
         </button>

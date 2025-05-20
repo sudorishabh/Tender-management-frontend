@@ -1,39 +1,19 @@
-"use client";
-import React, { useEffect, useRef } from "react";
+import React, { FC } from "react";
 import LiveTendersFilterBar from "@/components/Tender/For-Admin/LiveTendersFilterBar";
-import { useGetTendersQuery } from "@/Redux/tender/tenderApi";
-import { useSelector } from "react-redux";
-import { RootState } from "@/Redux/store";
 import { SearchX } from "lucide-react";
-import PageLoading from "@/components/Shared/PageLoading";
 import TenderCardWithActions from "./TenderCardWithActions";
 import InfiniteScroll from "@/components/Shared/InfiniteScroll";
-import { IAllTenderCard } from "@/app/Types/Tender-Types";
+import { IAllTenderCard, ILiveTenders } from "@/Types/Tender-Types";
 
-const LiveTenders = () => {
-  const pageRef = useRef(1);
+interface Props {
+  data: ILiveTenders;
+  isLoading: boolean;
+  refetch: () => void;
+  isFetching: boolean;
+  pageRef: React.MutableRefObject<number>;
+}
 
-  const {
-    tenderAdminFilter: { searchQuery, category, department },
-  } = useSelector((state: RootState) => state.tenderSlice);
-
-  const { data, isLoading, isFetching, refetch } = useGetTendersQuery({
-    search: searchQuery,
-    category: category,
-    department: department,
-    page: pageRef.current,
-    limit: 5,
-  });
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      refetch();
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [searchQuery, category, department, refetch]);
-
-  if (isLoading) return <PageLoading />;
-
+const LiveTenders: FC<Props> = ({ data, refetch, isFetching, pageRef }) => {
   return (
     <div>
       <div className='w-full'>

@@ -23,11 +23,15 @@ import { useFormContext } from "react-hook-form";
 
 interface Props {
   setActive: (active: number) => void;
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
-const TenderFeeDetails: FC<Props> = ({ setActive, onSave, isSavingTender }) => {
+const TenderFeeDetails: FC<Props> = ({
+  setActive,
+  handleSaveTender,
+  isSavingTender,
+}) => {
   const {
     register,
     formState: { errors },
@@ -59,7 +63,7 @@ const TenderFeeDetails: FC<Props> = ({ setActive, onSave, isSavingTender }) => {
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}

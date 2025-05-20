@@ -33,14 +33,6 @@ export const authApi = api.injectEndpoints({
         url: "/auth/refresh",
         method: "GET",
       }),
-      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data } = await queryFulfilled;
-      //     dispatch(setUser(data.user));
-      //   } catch (err) {
-      //   } finally {
-      //   }
-      // },
     }),
 
     logout: builder.query({

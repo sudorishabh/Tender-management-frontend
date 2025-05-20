@@ -1,4 +1,4 @@
-import { ICategoryInfo } from "@/app/Types/Category-Types";
+import { ICategoryInfo } from "@/Types/Category-Types";
 import React, { FC } from "react";
 
 interface Props {
@@ -8,7 +8,6 @@ interface Props {
 }
 
 const CategoryInfo: FC<Props> = ({ data }) => {
-
   return (
     <div className='p-4 flex flex-col gap-4'>
       <div className='flex'>

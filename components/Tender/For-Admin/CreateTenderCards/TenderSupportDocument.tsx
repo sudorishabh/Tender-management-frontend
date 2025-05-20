@@ -34,13 +34,13 @@ import { useDeleteFileUrlMutation } from "@/Redux/s3-files/s3-files-Api";
 
 interface Props {
   setActive: (active: number) => void;
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
 const TenderSupportDocument: FC<Props> = ({
   setActive,
-  onSave,
+  handleSaveTender,
   isSavingTender,
 }) => {
   const {
@@ -119,7 +119,7 @@ const TenderSupportDocument: FC<Props> = ({
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}

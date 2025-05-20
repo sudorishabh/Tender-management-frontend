@@ -1,19 +1,24 @@
-"use client";
-import React, { useRef } from "react";
-import { useGetVendorsQuery } from "@/Redux/vendor/vendorApi";
+import React from "react";
 import VendorsTable from "./VendorsTable";
-import PageLoading from "@/components/Shared/PageLoading";
 import { Building, Users, SearchX } from "lucide-react";
+import { IVendorsResponse } from "@/Types/Vendor-Types";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { RootState } from "@/Redux/store";
+import { setManageVendorStatus } from "@/Redux/vendor/venderSlice";
 
-const ManageVendors = () => {
-  const pageRef = useRef(1);
-  const { data, isLoading, isFetching, refetch } = useGetVendorsQuery({
-    page: pageRef.current,
-    limit: 10,
-  });
+interface Props {
+  data: IVendorsResponse;
+  isFetching: boolean;
+  refetch: () => void;
+  pageRef: React.MutableRefObject<number>;
+}
 
-  if (isLoading) return <PageLoading />;
-
+const ManageVendors = ({ data, isFetching, refetch, pageRef }: Props) => {
+  const dispatch = useDispatch();
+  const { manageVendorStatus } = useSelector(
+    (state: RootState) => state.venderSlice
+  );
   return (
     <div>
       <div className='w-full bg-white mb-4'>
@@ -29,12 +34,40 @@ const ManageVendors = () => {
       <div className='container mx-auto px-6 space-y-6'>
         <div className='bg-white rounded-xl shadow-sm border border-gray-100'>
           <div className='p-4 bg-gray-50 border-b flex items-center justify-between'>
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-4'>
               <Users
                 size={18}
                 className='text-primary'
               />
               <h2 className='font-semibold text-gray-900'>Vendors List</h2>
+              <div className='flex items-center gap-3'>
+                <select
+                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
+                  value={manageVendorStatus}
+                  onChange={(e) =>
+                    dispatch(setManageVendorStatus(e.target.value))
+                  }>
+                  <option value='all'>Sort by Status</option>
+                  <option value='pending'>Pending</option>
+                  <option value='approved'>Approved</option>
+                  <option value='rejected'>Rejected</option>
+                </select>
+                {/* <select
+                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
+                  value={manageVendorCategory}
+                  onChange={(e) =>
+                    dispatch(setManageVendorCategory(e.target.value))
+                  }>
+                  <option value='all'>Sort by Category</option>
+                  {categoryData?.map((category) => (
+                    <option
+                      key={category.name}
+                      value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select> */}
+              </div>
             </div>
             <div className='flex items-center gap-2 text-sm text-gray-500'>
               <Building

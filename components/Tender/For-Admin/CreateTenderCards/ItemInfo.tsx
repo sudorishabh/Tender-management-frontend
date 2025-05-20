@@ -28,7 +28,7 @@ import {
   Save,
   RefreshCw,
 } from "lucide-react";
-import { ICategoryName } from "@/app/Types/Category-Types";
+import { ICategoryName } from "@/Types/Category-Types";
 // Helper function to generate a unique tender number
 const generateUniqueTenderNumber = () => {
   const timestampPart = Date.now().toString().slice(-4);
@@ -39,14 +39,14 @@ const generateUniqueTenderNumber = () => {
 interface Props {
   setActive: (active: number) => void;
   categoriesData: ICategoryName[];
-  onSave: () => void;
+  handleSaveTender: () => void;
   isSavingTender: boolean;
 }
 
 const ItemInfo: FC<Props> = ({
   setActive,
   categoriesData,
-  onSave,
+  handleSaveTender,
   isSavingTender,
 }) => {
   const {
@@ -88,7 +88,7 @@ const ItemInfo: FC<Props> = ({
         <Button
           type='button'
           className={secondaryButtonStyle2}
-          onClick={onSave}
+          onClick={handleSaveTender}
           disabled={isSavingTender}>
           <Save />
           {isSavingTender ? "Saving..." : "Save as Draft"}
@@ -171,7 +171,7 @@ const ItemInfo: FC<Props> = ({
                   id='tenderNumber'
                   className={`${inputStyle} bg-gray-100 focus:bg-gray-100 cursor-not-allowed`}
                   type='text'
-                  placeholder='Generated tender number'
+                  placeholder='Generate number'
                   readOnly
                   {...register("itemInfo.tenderNumber", {
                     required: "Tender number is required",

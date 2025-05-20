@@ -11,7 +11,7 @@ import {
 import { Eye, FilePenLine } from "lucide-react";
 import Link from "next/link";
 import { capitalizeFirstLetter } from "@/lib/helper";
-import { ICategories } from "@/app/Types/Category-Types";
+import { ICategories } from "@/Types/Category-Types";
 import { Button } from "@/components/ui/button";
 
 interface Props {

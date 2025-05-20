@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { capitalizeFirstLetter } from "@/lib/helper";
 import { Button } from "../ui/button";
-import { IBidCard } from "@/app/Types/Bid-Types";
+import { IBidCard } from "@/Types/Bid-Types";
 import { FC } from "react";
 import {
   borderStyle,

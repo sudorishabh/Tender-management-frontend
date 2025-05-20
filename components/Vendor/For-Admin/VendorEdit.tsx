@@ -1,44 +1,19 @@
-"use client";
-import { useGetVendorDetailsQuery } from "@/Redux/vendor/vendorApi";
-import { ArrowLeft, LoaderCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import React, { FC } from "react";
 import ManageVendorCategories from "./ManageVendorCategories";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/Redux/store";
-import { setActiveVendorDetails } from "@/Redux/vendor/venderDetailsPageSlice";
-import EditVendorInfo from "./EditVendorInfo";
 import { useRouter } from "next/navigation";
+import EditVendorInfo from "./EditVendorInfo";
+import { IVendorEditResponse } from "@/Types/Vendor-Types";
+
 interface Props {
   vendorId: string;
+  data: IVendorEditResponse;
+  active: number;
+  setActive: (active: number) => void;
 }
 
-const VendorEdit: FC<Props> = ({ vendorId }) => {
+const VendorEdit: FC<Props> = ({ vendorId, data, active, setActive }) => {
   const router = useRouter();
-  const { active } = useSelector(
-    (state: RootState) => state.venderDetailsPageSlice
-  );
-  const { data, isLoading, isError } = useGetVendorDetailsQuery(vendorId);
-
-  const dispatch = useDispatch();
-  const setActive = (index: number) => {
-    dispatch(setActiveVendorDetails(index));
-  };
-
-  if (isLoading)
-    return (
-      <div className='w-full mt-40 flex items-center justify-center text-center'>
-        <LoaderCircle className='animate-spin mx-auto' />
-      </div>
-    );
-
-  if (isError || data.length === 0) {
-    return (
-      <div className='w-full mt-40 flex items-center justify-center text-center'>
-        <h1 className='text-red-500 text-xl'>Data not available</h1>
-      </div>
-    );
-  }
-
   return (
     <div className='container mx-auto px-6 py-8'>
       <div className='w-full bg-white mb-8'>
@@ -71,16 +46,16 @@ const VendorEdit: FC<Props> = ({ vendorId }) => {
             onClick={() => setActive(0)}>
             Information
           </button>
-          {data && data?.category?.is_sub_category !== true ? (
-            <button
-              className={`py-4 px-6 ${
-                active === 1 ? "border-b-2 font-semibold border-primary" : ""
-              }
+          {/* {data && data?.category?.is_sub_category !== true ? ( */}
+          <button
+            className={`py-4 px-6 ${
+              active === 1 ? "border-b-2 font-semibold border-primary" : ""
+            }
                 `}
-              onClick={() => setActive(1)}>
-              Category
-            </button>
-          ) : null}
+            onClick={() => setActive(1)}>
+            Category
+          </button>
+          {/* ) : null} */}
         </div>
 
         <div>

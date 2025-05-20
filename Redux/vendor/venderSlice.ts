@@ -35,6 +35,9 @@ interface VenderRegistrationState {
   businessInfoForm: BusinessInfoForm;
   venderInfoForm: VenderInfoForm;
   documentsInfoForm: DocumentsInfoForm;
+  vendorDetailsActive: number;
+  manageVendorStatus: string;
+  manageVendorCategory: string;
 }
 
 const initialData: VenderRegistrationState = {
@@ -65,6 +68,9 @@ const initialData: VenderRegistrationState = {
     registrationS3DocName: "",
     panCardS3DocName: "",
   },
+  vendorDetailsActive: 0,
+  manageVendorStatus: "all",
+  manageVendorCategory: "all",
 };
 
 // Validation functions
@@ -100,7 +106,7 @@ export const isFormValid = (state: VenderRegistrationState): boolean => {
   );
 };
 
-export const venderRegistrationSlice = createSlice({
+export const venderSlice = createSlice({
   name: "venderRegistrationSlice",
   initialState: initialData,
   reducers: {
@@ -119,6 +125,15 @@ export const venderRegistrationSlice = createSlice({
     setDocumentsForm: (state, { payload }) => {
       state.documentsInfoForm = payload;
     },
+    setActiveVendorDetails: (state, { payload }) => {
+      state.vendorDetailsActive = payload;
+    },
+    setManageVendorStatus: (state, { payload }) => {
+      state.manageVendorStatus = payload;
+    },
+    setManageVendorCategory: (state, { payload }) => {
+      state.manageVendorCategory = payload;
+    },
   },
 });
 
@@ -127,6 +142,9 @@ export const {
   setBusinessForm,
   setVenderForm,
   setDocumentsForm,
-} = venderRegistrationSlice.actions;
+  setActiveVendorDetails,
+  setManageVendorStatus,
+  setManageVendorCategory,
+} = venderSlice.actions;
 
-export default venderRegistrationSlice;
+export default venderSlice;

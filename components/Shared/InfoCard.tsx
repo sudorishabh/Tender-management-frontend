@@ -26,7 +26,7 @@ const InfoCard: FC<InfoCardProps> = ({
   return (
     <div
       className={cn(
-        "border rounded-xl shadow-md border-gray-10 overflow-hidden bg-white",
+        "border rounded-xl shadow-md overflow-hidden bg-white",
         className,
         borderStyle
       )}>

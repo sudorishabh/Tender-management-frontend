@@ -15,13 +15,11 @@ import {
 import { Button } from "@/components/ui/button";
 import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
 import PageLoading from "@/components/Shared/PageLoading";
-
 import { primaryButtonStyle, secondaryButtonStyle2 } from "@/app/Styles";
 import {
   useGetSelectedBidsQuery,
   useGetRejectedBidsQuery,
 } from "@/Redux/bid/bidApi";
-
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import SelectedBidsTable from "@/components/Bid/For-Admin/SelectedBidsTable";
@@ -34,14 +32,12 @@ const ReviewedBids = ({
   params: Promise<{ tenderId: string }>;
 }) => {
   const [activeTab, setActiveTab] = useState("selected");
-
   const { tenderId } = use(params);
   const router = useRouter();
   const { data: selectedBids, isLoading: isSelectedBidsLoading } =
     useGetSelectedBidsQuery(tenderId);
   const { data: rejectedBids, isLoading: isRejectedBidsLoading } =
     useGetRejectedBidsQuery(tenderId, { skip: activeTab === "selected" });
-
   const [rankedBidsDialogOpen, setRankedBidsDialogOpen] = useState(false);
 
   return (

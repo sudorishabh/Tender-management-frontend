@@ -14,7 +14,7 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { capitalizeFirstLetter } from "@/lib/helper";
 import { Button } from "@/components/ui/button";
-import { ITenderCard } from "@/app/Types/Tender-Types";
+import { ITenderCard } from "@/Types/Tender-Types";
 import { primaryButtonStyle } from "@/app/Styles";
 
 const TenderCard: FC<{ tender: ITenderCard }> = ({ tender }) => {

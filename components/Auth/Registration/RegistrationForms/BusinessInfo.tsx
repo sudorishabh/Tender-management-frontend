@@ -1,4 +1,4 @@
-import { IVenderRegistrationForm } from "@/app/Types/User-Types";
+import { IVenderRegistrationForm } from "@/Types/User-Types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
