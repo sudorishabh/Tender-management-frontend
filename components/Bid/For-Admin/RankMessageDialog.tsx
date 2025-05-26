@@ -14,7 +14,8 @@ import { IBidCard } from "@/Types/Bid-Types";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSendMailMutation } from "@/Redux/inform/informApi";
+// import { useSendMailMutation } from "@/Redux/inform/informApi";
+import { useSendCustomMailMutation } from "@/Redux/inform/informApi";
 import { toast } from "sonner";
 
 const RankMessageDialog = ({
@@ -29,19 +30,18 @@ const RankMessageDialog = ({
   const [subject, setSubject] = useState("");
   const [messageText, setMessageText] = useState("");
 
-  // const [sendCustomMail, { isLoading: isSendCustomMailLoading }] =
-  //   useSendCustomMailMutation();
+  const [sendCustomMail, { isLoading: isSendCustomMailLoading }] =
+    useSendCustomMailMutation();
 
-  const [sendMail, { isLoading: isSendMailLoading }] = useSendMailMutation();
+  // const [sendMail, { isLoading: isSendMailLoading }] = useSendMailMutation();
 
   const handleSendMessage = async () => {
     try {
-      await sendMail({
-        email: selectedBid?.vendor_email,
-        name: selectedBid?.vendor_name,
-        message: messageText,
-        // subject,
-        type: "welcome",
+      await sendCustomMail({
+        vendorEmail: selectedBid?.vendor_email,
+        vendorName: selectedBid?.vendor_name,
+        messageContent: messageText,
+        subject,
       });
 
       toast.success("Email sent successfully");
@@ -105,9 +105,9 @@ const RankMessageDialog = ({
             className={primaryButtonStyle}
             onClick={handleSendMessage}
             disabled={
-              isSendMailLoading || !messageText.trim() || !subject.trim()
+              isSendCustomMailLoading || !messageText.trim() || !subject.trim()
             }>
-            {isSendMailLoading ? (
+            {isSendCustomMailLoading ? (
               <>
                 <Clock className='h-4 w-4 mr-2 animate-spin' />
                 Sending...
