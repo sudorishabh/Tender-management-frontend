@@ -9,7 +9,7 @@ export const informApi = createApi({
   endpoints: (builder) => ({
     sendMail: builder.mutation({
       query: (data) => ({
-        url: "/welcome",
+        url: "/send-custom-email",
         method: "POST",
         body: data,
       }),
