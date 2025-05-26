@@ -15,10 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 // import { useSendMailMutation } from "@/Redux/inform/informApi";
-import {
-  useSendCustomMailMutation,
-  useSendMailMutation,
-} from "@/Redux/inform/informApi";
+import { useSendMailMutation } from "@/Redux/inform/informApi";
 import { toast } from "sonner";
 
 const RankMessageDialog = ({
