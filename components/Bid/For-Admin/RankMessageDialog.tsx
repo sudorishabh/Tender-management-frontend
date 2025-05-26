@@ -42,7 +42,7 @@ const RankMessageDialog = ({
         vendorName: selectedBid?.vendor_name,
         messageContent: messageText,
         subject,
-      });
+      }).unwrap();
 
       toast.success("Email sent successfully");
     } catch (error) {

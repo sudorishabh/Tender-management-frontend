@@ -10,6 +10,9 @@ import { setUser, setLogout } from "./auth/authSlice";
 const baseQuery = fetchBaseQuery({
   baseUrl: `${process.env.NEXT_PUBLIC_SERVER_URL}/api`,
   credentials: "include" as const,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 const fetchBaseQueryReAuth: BaseQueryFn<

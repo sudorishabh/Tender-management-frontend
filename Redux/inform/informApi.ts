@@ -28,6 +28,7 @@ export const informApi = api.injectEndpoints({
         url: "/inform/send-custom-mail",
         method: "POST",
         body: data,
+        credentials: "include" as const,
       }),
     }),
   }),
