@@ -3,7 +3,6 @@ import {
   Building2,
   Banknote,
   MapPin,
-  Download,
   ArrowRight,
   Hash,
   Briefcase,
@@ -13,6 +12,7 @@ import {
   CheckCircle,
   FileCheck,
   Star,
+  File,
 } from "lucide-react";
 import GeneralWrapper from "../Shared/GeneralWrapper";
 import { Button } from "../ui/button";
@@ -20,6 +20,10 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
+import { capitalizeFirstLetter, toIndianCurrency } from "@/lib/helper";
+import { primaryButtonStyle } from "@/app/Styles";
+import { cn } from "@/lib/utils";
+import PdfViewerModal from "../Shared/PdfViewerModal";
 
 interface TenderData {
   id: string;
@@ -74,7 +78,7 @@ interface TenderSupportDocument {
   id: string;
   name: string;
   purpose: string;
-  doc_url: string;
+  doc_s3_name: string;
   tender_id: string;
   created_at: string;
 }
@@ -104,7 +108,7 @@ const SectionHeader = ({
   title: string;
 }) => (
   <div className='flex items-center gap-2 mb-6'>
-    <div className='h-9 w-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600'>
+    <div className='h-9 w-9 rounded-full bg-accent/10 flex items-center justify-center text-accent'>
       {icon}
     </div>
     <h2 className='text-xl font-semibold text-gray-800'>{title}</h2>
@@ -118,6 +122,8 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
     tenderPreQualification,
     tenderSupportDocuments,
   } = tenderData?.tenderData;
+
+  console.log(tenderSupportDocuments);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -167,11 +173,11 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                 </div>
 
                 <h1 className='text-2xl sm:text-3xl font-bold text-gray-900 mb-4'>
-                  {tender.title}
+                  {capitalizeFirstLetter(tender.title)}
                 </h1>
 
                 <div className='flex items-center text-sm text-gray-600'>
-                  <Building2 className='h-4 w-4 mr-2 text-blue-600' />
+                  <Building2 className='h-4 w-4 mr-2 text-accent' />
                   <span className='font-medium mr-1'>{tender.company}</span>
                   <span className='mx-2'>•</span>
                   <span>{tender.department}</span>
@@ -182,7 +188,7 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                 <Link href={`/tender/buy/${tender.id}`}>
                   <Button
                     size='lg'
-                    className='bg-blue-600 hover:bg-blue-700 text-white shadow-sm'>
+                    className={primaryButtonStyle}>
                     Purchase Tender
                     <ArrowRight className='ml-2 h-4 w-4' />
                   </Button>
@@ -192,27 +198,35 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
 
             {/* Key details */}
             <div className='flex flex-wrap gap-4 mt-6'>
-              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+              <div className='flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-mmd'>
                 <MapPin className='h-4 w-4 text-gray-500' />
-                <span className='text-sm font-medium'>{tender.location}</span>
+                <span className='text-sm font-medium'>
+                  {capitalizeFirstLetter(tender.location)}
+                </span>
               </div>
 
-              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+              <div className='flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-mmd'>
                 <Briefcase className='h-4 w-4 text-gray-500' />
-                <span className='text-sm font-medium'>{tender.type}</span>
+                <span className='text-sm font-medium'>
+                  {capitalizeFirstLetter(tender.type)}
+                </span>
               </div>
 
-              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+              <div className='flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-mmd'>
                 <Tag className='h-4 w-4 text-gray-500' />
-                <span className='text-sm font-medium'>{tender.category}</span>
+                <span className='text-sm font-medium'>
+                  {capitalizeFirstLetter(tender.category)}
+                </span>
               </div>
 
-              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+              <div className='flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-mmd'>
                 <Banknote className='h-4 w-4 text-gray-500' />
-                <span className='text-sm font-medium'>{tender.value}</span>
+                <span className='text-sm font-medium'>
+                  {capitalizeFirstLetter(tender.value)}
+                </span>
               </div>
 
-              <div className='flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-md'>
+              <div className='flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-mmd'>
                 <Calendar className='h-4 w-4 text-gray-500' />
                 <span className='text-sm font-medium'>
                   Deadline: {formatDate(tender.bid_submission_end_date)}
@@ -223,9 +237,9 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
 
           {/* Main content - Single page layout */}
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-            <div className='lg:col-span-2 space-y-8'>
+            <div className='lg:col-span-2 space-y-8 '>
               {/* Project Description Section */}
-              <section className='bg-white border rounded-lg p-6'>
+              <section className='bg-white shadow-md border border-gray-300 rounded-lg p-6'>
                 <SectionHeader
                   icon={<FileText className='h-5 w-5' />}
                   title='Project Overview'
@@ -236,7 +250,7 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
               </section>
 
               {/* Pre-qualification Section */}
-              <section className='bg-white border rounded-lg p-6'>
+              <section className='bg-white border rounded-lg p-6 shadow-md border-gray-300'>
                 <SectionHeader
                   icon={<CheckCircle className='h-5 w-5' />}
                   title='Pre-qualification Requirements'
@@ -246,8 +260,8 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                   <h3 className='text-base font-medium text-gray-800 mb-3'>
                     Pre-bid Qualifications
                   </h3>
-                  <div className='bg-gray-50 border border-gray-100 rounded-lg p-4'>
-                    <p className='text-gray-700'>{tender.tech_prebid_qual}</p>
+                  <div className='bg-gray-100 border border-gray-200 rounded-lg p-4'>
+                    <p className='text-gray-700 '>{tender.tech_prebid_qual}</p>
                   </div>
                 </div>
 
@@ -259,9 +273,9 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                     {tenderPreQualification.map((qual) => (
                       <div
                         key={qual.id}
-                        className='bg-white border border-gray-200 rounded-lg p-4'>
+                        className='bg-gray-100 border border-gray-200 rounded-lg p-4'>
                         <div className='flex items-start gap-3'>
-                          <div className='h-8 w-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5'>
+                          <div className='h-8 w-8 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 mt-0.5'>
                             <span className='font-medium'>{qual.score}</span>
                           </div>
                           <div>
@@ -280,7 +294,7 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
               </section>
 
               {/* Required Documents Section */}
-              <section className='bg-white border rounded-lg p-6'>
+              <section className='bg-white border rounded-lg p-6 shadow-md border-gray-300'>
                 <SectionHeader
                   icon={<FileCheck className='h-5 w-5' />}
                   title='Document Requirements'
@@ -294,23 +308,23 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                     {bidderDocumentsReq.map((doc, index) => (
                       <div
                         key={doc.id}
-                        className='border border-gray-100 rounded-lg overflow-hidden'>
-                        <div className='bg-gray-50 px-4 py-3 border-b'>
+                        className='border shadow border-gray-100  rounded-lg overflow-hidden'>
+                        <div className='bg-gray-100 px-4 py-3 border-b'>
                           <div className='flex justify-between items-center'>
                             <h4 className='font-medium text-gray-900 flex items-center'>
-                              <span className='h-6 w-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-2 text-xs'>
+                              <span className='h-6 w-6 rounded-full bg-accent/10 text-accent flex items-center justify-center mr-2 text-xs'>
                                 {index + 1}
                               </span>
                               {doc.name}
                             </h4>
                             <Badge
                               variant='outline'
-                              className='bg-blue-50 text-blue-700'>
+                              className='bg-accent/10 text-accent'>
                               {doc.format}
                             </Badge>
                           </div>
                         </div>
-                        <div className='p-4'>
+                        <div className='p-4 bg-gray-50'>
                           <p className='text-sm text-gray-600'>{doc.purpose}</p>
                         </div>
                       </div>
@@ -326,28 +340,41 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                     {tenderSupportDocuments?.map((doc) => (
                       <div
                         key={doc.id}
-                        className='bg-white border border-gray-100 rounded-lg overflow-hidden'>
-                        <div className='p-4 border-b bg-gray-50'>
+                        className='bg-white  shadow border border-gray-100 rounded-lg overflow-hidden'>
+                        <div className='py-3 px-4 border-b bg-gray-100'>
                           <h3 className='font-medium text-gray-900 truncate'>
-                            {doc.name}
+                            {capitalizeFirstLetter(doc.name)}
                           </h3>
                         </div>
-                        <div className='p-4'>
+                        <div className='p-4 bg-gray-50'>
                           <p className='text-sm text-gray-600 mb-4 line-clamp-2'>
                             {doc.purpose}
                           </p>
-                          <Button
+                          <PdfViewerModal
+                            value={doc.doc_s3_name}
+                            isS3File={true}
+                            triggerButton={
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                className='w-full flex items-center justify-center hover:bg-accent/10 hover:text-accent transition-colors'>
+                                <File className='h-5 w-4 mr-2' />
+                                View Document
+                              </Button>
+                            }
+                          />
+                          {/* <Button
                             variant='outline'
                             size='sm'
-                            className='w-full flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-colors'
+                            className='w-full flex items-center justify-center hover:bg-accent/10 hover:text-accent transition-colors'
                             asChild>
                             <a
-                              href={doc.doc_url}
+                              href={doc.doc_s3_name}
                               download>
                               <Download className='h-4 w-4 mr-2' />
                               Download
                             </a>
-                          </Button>
+                          </Button> */}
                         </div>
                       </div>
                     ))}
@@ -356,9 +383,9 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
               </section>
             </div>
 
-            <div>
+            <div className='grid grid-cols-1 gap-8'>
               {/* Financial Details Section */}
-              <section className='bg-white border rounded-lg p-6 mb-6'>
+              <section className='bg-white border rounded-lg p-6 shadow-md border-gray-300 '>
                 <SectionHeader
                   icon={<Banknote className='h-5 w-5' />}
                   title='Financial Details'
@@ -367,19 +394,19 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
                   <div className='flex justify-between py-2 border-b'>
                     <span className='text-gray-600'>Tender Value</span>
                     <span className='font-medium text-gray-900'>
-                      {tender.value}
+                      {toIndianCurrency(Number(tender.value))}
                     </span>
                   </div>
                   <div className='flex justify-between py-2 border-b'>
                     <span className='text-gray-600'>Document Fee</span>
                     <span className='font-medium text-gray-900'>
-                      {tender.doc_fee}
+                      {toIndianCurrency(Number(tender.doc_fee))}
                     </span>
                   </div>
                   <div className='flex justify-between py-2 border-b'>
                     <span className='text-gray-600'>EMD</span>
                     <span className='font-medium text-gray-900'>
-                      {tender.emd}
+                      {toIndianCurrency(Number(tender.emd))}
                     </span>
                   </div>
                   <div className='flex justify-between py-2 border-b'>
@@ -398,7 +425,7 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
               </section>
 
               {/* Evaluation Section */}
-              <section className='bg-white border rounded-lg p-6 mb-6'>
+              <section className='bg-white border rounded-lg p-6 shadow-md border-gray-300'>
                 <SectionHeader
                   icon={<Star className='h-5 w-5' />}
                   title='Evaluation Criteria'
@@ -420,7 +447,7 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
               </section>
 
               {/* Timeline Section */}
-              <section className='bg-white border rounded-lg p-6'>
+              <section className='bg-white border rounded-lg p-6 shadow-md border-gray-300'>
                 <SectionHeader
                   icon={<Calendar className='h-5 w-5' />}
                   title='Important Dates'
@@ -474,12 +501,12 @@ const TenderDetails: React.FC<TenderDetailsProps> = ({ tenderData }) => {
 
                 {/* Call to action */}
                 <div className='mt-8 bg-blue-50 border border-blue-100 rounded-lg p-4'>
-                  <p className='text-sm text-blue-800 mb-4'>
+                  <p className='text-sm text-primary mb-4'>
                     Ready to participate? Purchase this tender document to
                     access all required information and guidelines.
                   </p>
                   <Link href={`/tender/buy/${tender.id}`}>
-                    <Button className='w-full bg-blue-600 hover:bg-blue-700 text-white'>
+                    <Button className={cn(primaryButtonStyle, "w-full")}>
                       Purchase Tender
                       <ArrowRight className='ml-2 h-4 w-4' />
                     </Button>

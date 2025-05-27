@@ -139,3 +139,11 @@ export const getPdfFileQuery = (fileName: string) => {
 //     throw err;
 //   }
 // };
+
+export const toIndianCurrency = (amount: number) => {
+  return amount.toLocaleString("en-IN", {
+    style: "currency",
+    currency: "INR",
+    minimumFractionDigits: 0,
+  });
+};

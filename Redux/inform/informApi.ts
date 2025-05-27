@@ -5,6 +5,9 @@ export const informApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_EMAIL_SERVER_URL}`,
     credentials: "include" as const,
+    headers: {
+      "Content-Type": "application/json",
+    },
   }),
   endpoints: (builder) => ({
     sendMail: builder.mutation({
@@ -18,19 +21,3 @@ export const informApi = createApi({
 });
 
 export const { useSendMailMutation } = informApi;
-
-// import { api } from "../api";
-
-// export const informApi = api.injectEndpoints({
-//   endpoints: (builder) => ({
-//     sendCustomMail: builder.mutation({
-//       query: (data) => ({
-//         url: "/inform/send-custom-mail",
-//         method: "POST",
-//         body: data,
-//       }),
-//     }),
-//   }),
-// });
-
-// export const { useSendCustomMailMutation } = informApi;
