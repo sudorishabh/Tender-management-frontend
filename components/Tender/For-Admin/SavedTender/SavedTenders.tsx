@@ -56,7 +56,7 @@ const SavedTenders: FC<Props> = ({
               <Link
                 href='/admin/create'
                 className='block group'>
-                <div className='h-full bg-white border border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-primary/40 hover:bg-primary/5 cursor-pointer'>
+                <div className='h-full bg-white border border-gray-300 shadow-md rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-primary/40 hover:bg-primary/5 cursor-pointer'>
                   <div className='w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors'>
                     <Plus className='h-8 w-8 text-primary' />
                   </div>

@@ -14,7 +14,7 @@ const savedTenderCard: FC<Props> = ({ savedTender, handleConfirmDelete }) => {
   return (
     <div
       key={savedTender.id}
-      className='bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300'>
+      className='bg-white border border-gray-300 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300'>
       <div className='p-6'>
         <div className='flex justify-between items-start mb-4'>
           <span className='px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800'>

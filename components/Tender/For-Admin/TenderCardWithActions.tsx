@@ -1,8 +1,4 @@
-import {
-  borderStyle,
-  primaryButtonStyle,
-  secondaryButtonStyle2,
-} from "@/app/Styles";
+import { primaryButtonStyle, secondaryButtonStyle2 } from "@/app/Styles";
 import { IAllTenderCard } from "@/Types/Tender-Types";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -39,8 +35,8 @@ const TenderCardWithActions = ({ tender }: { tender: IAllTenderCard }) => {
       className='mb-5'>
       <Card
         className={cn(
-          "overflow-hidden shadow-none border transition-shadow duration-300 mb-4",
-          borderStyle
+          "overflow-hidden shadow-md border border-gray-300 transition-shadow duration-300 mb-4"
+          // borderStyle
         )}>
         <div className='flex flex-col md:flex-row w-full'>
           <div className='flex-1 p-5'>

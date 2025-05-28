@@ -15,8 +15,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 // import { useSendMailMutation } from "@/Redux/inform/informApi";
-import { useSendMailMutation } from "@/Redux/inform/informApi";
+// import { useSendMailMutation } from "@/Redux/inform/informApi";
 import { toast } from "sonner";
+import { useSendCustomMailMutation } from "@/Redux/inform/informApi2";
 
 const RankMessageDialog = ({
   messageDialogOpen,
@@ -33,11 +34,19 @@ const RankMessageDialog = ({
   // const [sendCustomMail, { isLoading: isSendCustomMailLoading }] =
   //   useSendCustomMailMutation();
 
-  const [sendMail, { isLoading: isSendMailLoading }] = useSendMailMutation();
+  // const [sendMail, { isLoading: isSendMailLoading }] = useSendMailMutation();
+  const [sendCustomMail, { isLoading: isSendMailLoading }] =
+    useSendCustomMailMutation();
 
   const handleSendMessage = async () => {
+    // const body = JSON.stringify({
+    //   vendorEmail: selectedBid?.vendor_email,
+    //   vendorName: selectedBid?.vendor_name,
+    //   messageContent: messageText,
+    //   subject,
+    // });
     try {
-      await sendMail({
+      await sendCustomMail({
         vendorEmail: selectedBid?.vendor_email,
         vendorName: selectedBid?.vendor_name,
         messageContent: messageText,
