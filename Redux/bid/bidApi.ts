@@ -66,14 +66,6 @@ interface IBidsOnTenderResponse {
 
 const bidApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    createBid: builder.mutation({
-      query: (data) => ({
-        url: `/bid/create`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-
     getAllBids: builder.query({
       query: () => ({
         url: `/bid/all`,
@@ -111,6 +103,7 @@ const bidApi = api.injectEndpoints({
       }) {
         return currentArg?.page !== previousArg?.page;
       },
+      providesTags: ["tender_bids"],
     }),
 
     getBidById: builder.query({
@@ -118,25 +111,7 @@ const bidApi = api.injectEndpoints({
         url: `/bid/details/${bidId}`,
         method: "GET",
       }),
-      providesTags: ["bids"],
-    }),
-
-    updateBidScore: builder.mutation({
-      query: ({ bidId, technicalScore, financialScore }) => ({
-        url: `/bid/update-score/${bidId}`,
-        method: "POST",
-        body: { technicalScore, financialScore },
-      }),
-      invalidatesTags: ["bids"],
-    }),
-
-    setBidStatus: builder.mutation({
-      query: ({ bidId, status, ranking, message }) => ({
-        url: `/bid/set-status/${bidId}`,
-        method: "POST",
-        body: { status, ranking, message },
-      }),
-      invalidatesTags: ["bids"],
+      providesTags: ["bid_details"],
     }),
 
     getSelectedBids: builder.query({
@@ -144,7 +119,7 @@ const bidApi = api.injectEndpoints({
         url: `/bid/selected-bids/${tenderId}`,
         method: "GET",
       }),
-      providesTags: ["selectedBids"],
+      providesTags: ["selected_bids"],
     }),
 
     getRejectedBids: builder.query({
@@ -152,16 +127,7 @@ const bidApi = api.injectEndpoints({
         url: `/bid/rejected-bids/${tenderId}`,
         method: "GET",
       }),
-      providesTags: ["rejectedBids"],
-    }),
-
-    setBidRanking: builder.mutation({
-      query: ({ bidId, ranking }) => ({
-        url: `/bid/set-ranking/${bidId}`,
-        method: "POST",
-        body: { ranking },
-      }),
-      invalidatesTags: ["rankedBids"],
+      providesTags: ["rejected_bids"],
     }),
 
     getRankedBids: builder.query({
@@ -169,29 +135,15 @@ const bidApi = api.injectEndpoints({
         url: `/bid/ranked-bids/${tenderId}`,
         method: "GET",
       }),
-      providesTags: ["rankedBids"],
-    }),
-
-    deleteBids: builder.mutation({
-      query: (bidIds) => ({
-        url: `/bid/delete`,
-        method: "DELETE",
-        body: { bidIds },
-      }),
-      invalidatesTags: ["bids"],
-    }),
-
-    approveBid: builder.mutation({
-      query: (bidId) => ({
-        url: `/bid/approve-bid/${bidId}`,
-        method: "POST",
-      }),
+      providesTags: ["ranked_bids"],
     }),
 
     isBidApproved: builder.query({
       query: (tenderId) => ({
         url: `/bid/is-bid-approved/${tenderId}`,
+        method: "GET",
       }),
+      providesTags: ["is_bid_approved"],
     }),
 
     getVendorPurchasedBids: builder.query({
@@ -227,6 +179,7 @@ const bidApi = api.injectEndpoints({
     getVendorApprovedBids: builder.query({
       query: ({ vendorId, page, limit }) => ({
         url: `/bid/vendor-approved-bids/${vendorId}?page=${page}&limit=${limit}`,
+        method: "GET",
       }),
       serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
         return endpointName;
@@ -255,6 +208,58 @@ const bidApi = api.injectEndpoints({
       }) {
         return currentArg?.page !== previousArg?.page;
       },
+    }),
+
+    createBid: builder.mutation({
+      query: (data) => ({
+        url: `/bid/create`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    updateBidScore: builder.mutation({
+      query: ({ bidId, technicalScore, financialScore }) => ({
+        url: `/bid/update-score/${bidId}`,
+        method: "POST",
+        body: { technicalScore, financialScore },
+      }),
+      invalidatesTags: ["tender_bids", "bid_details"],
+    }),
+
+    setBidStatus: builder.mutation({
+      query: ({ bidId, status, ranking, message }) => ({
+        url: `/bid/set-status/${bidId}`,
+        method: "POST",
+        body: { status, ranking, message },
+      }),
+      invalidatesTags: ["tender_bids", "bid_details"],
+    }),
+
+    setBidRanking: builder.mutation({
+      query: ({ bidId, ranking }) => ({
+        url: `/bid/set-ranking/${bidId}`,
+        method: "POST",
+        body: { ranking },
+      }),
+      invalidatesTags: ["ranked_bids", "selected_bids"],
+    }),
+
+    deleteBids: builder.mutation({
+      query: (bidIds) => ({
+        url: `/bid/delete`,
+        method: "DELETE",
+        body: { bidIds },
+      }),
+      invalidatesTags: ["bids"],
+    }),
+
+    approveBid: builder.mutation({
+      query: (bidId) => ({
+        url: `/bid/approve-bid/${bidId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["selected_bids", "is_bid_approved"],
     }),
   }),
 });
