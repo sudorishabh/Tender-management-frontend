@@ -233,7 +233,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className='container mx-auto px-6 mb-12'>
+      {/* <div className='container mx-auto px-6 mb-12'>
         <Tabs
           defaultValue='overview'
           value={activeTab}
@@ -270,11 +270,11 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Overview Tab */}
+        
           <TabsContent
             value='overview'
             className='space-y-6'>
-            {/* Stats Cards */}
+         
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
               <Card className='bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow'>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -373,9 +373,9 @@ const AdminDashboard = () => {
               </Card>
             </div>
 
-            {/* Recent Activity Section */}
+      
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              {/* Recent Tenders */}
+         
               <div className='bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden'>
                 <div className='p-4 bg-gray-50 border-b flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
@@ -427,7 +427,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Recent Bids */}
+       
               <div className='bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden'>
                 <div className='p-4 bg-gray-50 border-b flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
@@ -476,7 +476,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Category Distribution */}
+      
             <div className='bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden'>
               <div className='p-4 bg-gray-50 border-b flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
@@ -522,7 +522,6 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
-          {/* Tenders Tab */}
           <TabsContent
             value='tenders'
             className='space-y-6'>
@@ -651,7 +650,6 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
-          {/* Bids Tab */}
           <TabsContent
             value='bids'
             className='space-y-6'>
@@ -767,7 +765,7 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
-          {/* Vendors Tab */}
+         
           <TabsContent
             value='vendors'
             className='space-y-6'>
@@ -890,7 +888,7 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
         </Tabs>
-      </div>
+      </div> */}
     </div>
   );
 };

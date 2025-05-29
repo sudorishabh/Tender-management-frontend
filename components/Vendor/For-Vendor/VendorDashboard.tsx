@@ -1,95 +1,95 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  BadgeCheck,
-  CheckCircle2,
-  LoaderCircle,
-  ShoppingBag,
-} from "lucide-react";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import {
+//   BadgeCheck,
+//   CheckCircle2,
+//   LoaderCircle,
+//   ShoppingBag,
+// } from "lucide-react";
 import React from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { useGetVendorDashboardStatsQuery } from "@/Redux/vendor/vendorApi";
-import { formatDistanceToNow } from "date-fns";
+// import Link from "next/link";
+// import { Button } from "@/components/ui/button";
+// import { useGetVendorDashboardStatsQuery } from "@/Redux/vendor/vendorApi";
+// import { formatDistanceToNow } from "date-fns";
 
 // Define activity type
-interface Activity {
-  id: number | string;
-  type: string;
-  status: string;
-  createdAt: string;
-  tenderId: number | string;
-  tenderTitle: string;
-  tenderNumber: string;
-}
+// interface Activity {
+//   id: number | string;
+//   type: string;
+//   status: string;
+//   createdAt: string;
+//   tenderId: number | string;
+//   tenderTitle: string;
+//   tenderNumber: string;
+// }
 
 const VendorDashboard = () => {
-  const {
-    data: statsData,
-    isLoading,
-    error,
-  } = useGetVendorDashboardStatsQuery({});
+  // const {
+  //   data: statsData,
+  //   isLoading,
+  //   error,
+  // } = useGetVendorDashboardStatsQuery({});
 
-  if (isLoading) {
-    return (
-      <div className='flex justify-center items-center h-96'>
-        <LoaderCircle className='h-10 w-10 animate-spin text-blue-600' />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className='flex justify-center items-center h-96'>
+  //       <LoaderCircle className='h-10 w-10 animate-spin text-blue-600' />
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return (
-      <div className='px-8 py-6'>
-        <h1 className='text-2xl font-bold mb-6'>Vendor Dashboard</h1>
-        <div className='bg-red-50 p-4 rounded-lg border border-red-200'>
-          <p className='text-red-700'>
-            There was an error loading dashboard data. Please try again later.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className='px-8 py-6'>
+  //       <h1 className='text-2xl font-bold mb-6'>Vendor Dashboard</h1>
+  //       <div className='bg-red-50 p-4 rounded-lg border border-red-200'>
+  //         <p className='text-red-700'>
+  //           There was an error loading dashboard data. Please try again later.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  const stats = statsData?.stats || {
-    purchasedTenders: 0,
-    qualifiedTenders: 0,
-    participatedTenders: 0,
-    activeBids: 0,
-    recentActivities: [],
-  };
+  // const stats = statsData?.stats || {
+  //   purchasedTenders: 0,
+  //   qualifiedTenders: 0,
+  //   participatedTenders: 0,
+  //   activeBids: 0,
+  //   recentActivities: [],
+  // };
 
-  const getActivityIcon = (type: string, status: string) => {
-    if (type === "purchase")
-      return <ShoppingBag className='h-4 w-4 text-blue-600' />;
-    if (status === "qualified")
-      return <BadgeCheck className='h-4 w-4 text-green-600' />;
-    return <CheckCircle2 className='h-4 w-4 text-purple-600' />;
-  };
+  // const getActivityIcon = (type: string, status: string) => {
+  //   if (type === "purchase")
+  //     return <ShoppingBag className='h-4 w-4 text-blue-600' />;
+  //   if (status === "qualified")
+  //     return <BadgeCheck className='h-4 w-4 text-green-600' />;
+  //   return <CheckCircle2 className='h-4 w-4 text-purple-600' />;
+  // };
 
-  const getActivityBorderColor = (type: string, status: string) => {
-    if (type === "purchase") return "border-blue-500";
-    if (status === "qualified") return "border-green-500";
-    return "border-purple-500";
-  };
+  // const getActivityBorderColor = (type: string, status: string) => {
+  //   if (type === "purchase") return "border-blue-500";
+  //   if (status === "qualified") return "border-green-500";
+  //   return "border-purple-500";
+  // };
 
-  const getActivityText = (
-    type: string,
-    status: string,
-    tenderTitle: string
-  ) => {
-    if (type === "purchase") return `Documents purchased for ${tenderTitle}`;
-    if (status === "qualified") return `You qualified for ${tenderTitle}`;
-    return `Bid submitted for ${tenderTitle}`;
-  };
+  // const getActivityText = (
+  //   type: string,
+  //   status: string,
+  //   tenderTitle: string
+  // ) => {
+  //   if (type === "purchase") return `Documents purchased for ${tenderTitle}`;
+  //   if (status === "qualified") return `You qualified for ${tenderTitle}`;
+  //   return `Bid submitted for ${tenderTitle}`;
+  // };
 
   return (
     <div className='px-8 py-6'>
       <h1 className='text-2xl font-bold mb-6'>Vendor Dashboard</h1>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
-        {/* Purchased Tenders Card */}
+      {/* <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+       
         <Card className='bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-lg font-medium flex items-center'>
@@ -114,7 +114,7 @@ const VendorDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Qualified Tenders Card */}
+      
         <Card className='bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-lg font-medium flex items-center'>
@@ -139,7 +139,7 @@ const VendorDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Participated Tenders Card */}
+       
         <Card className='bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-lg font-medium flex items-center'>
@@ -164,7 +164,7 @@ const VendorDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Active Bids Card */}
+        
         <Card className='bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-lg font-medium flex items-center'>
@@ -186,10 +186,9 @@ const VendorDashboard = () => {
             </Link>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
-      {/* Recent activity section */}
-      <div className='mt-8'>
+      {/* <div className='mt-8'>
         <h2 className='text-xl font-semibold mb-4'>Recent Activity</h2>
         <Card className='bg-white shadow-sm'>
           <CardContent className='pt-6'>
@@ -232,7 +231,7 @@ const VendorDashboard = () => {
             )}
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 };
