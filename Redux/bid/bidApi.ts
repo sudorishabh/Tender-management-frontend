@@ -233,7 +233,7 @@ const bidApi = api.injectEndpoints({
         method: "POST",
         body: { status, ranking, message },
       }),
-      invalidatesTags: ["tender_bids", "bid_details"],
+      invalidatesTags: ["tender_bids", "bid_details", "selected_bids"],
     }),
 
     setBidRanking: builder.mutation({
