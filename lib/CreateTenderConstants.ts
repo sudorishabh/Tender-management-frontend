@@ -100,7 +100,7 @@ export const tenderFromDefaultValues: ITenderFormData = {
   ],
 
   // Bidder Documents
-  venderDocRequirement: [
+  vendorDocRequirement: [
     {
       name: "",
       type: "",

@@ -16,36 +16,25 @@ export interface IVendorsResponse {
 }
 
 export interface IVendorDetails {
+  user: {
+    id: string;
+    fullname: string;
+    status: string;
+    contactNumber: string;
+  };
   business: {
+    id: string;
+    businessName: string;
+    establishedYear: string;
     addressLineOne: string;
     addressLineTwo: string;
-    annualTurnover: string;
-    businessClassification: string;
-    businessName: string;
+    locality: string;
     city: string;
+    pinCode: string;
+    country: string;
+    website: string;
     companyEmail: string;
     companyPhone: string;
-    country: string;
-    establishedYear: string;
-    gstNumber: string;
-    id: number;
-    locality: string;
-    msmeCertificate: string;
-    pinCode: string;
-    registrationDoc: string;
-    registrationNumber: string;
-    website: string;
-  };
-  user: {
-    createdAt: string;
-    email: string;
-    fullname: string;
-    id: number;
-    panCardDoc: string;
-    panCardNumber: string;
-    phoneNumber: string;
-    role: string;
-    status: string;
   };
 }
 

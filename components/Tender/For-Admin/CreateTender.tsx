@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, FC } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import ItemInfo from "./CreateTenderCards/ItemInfo";
 import TenderSupportDocument from "./CreateTenderCards/TenderSupportDocument";
-import VenderDocRequirement from "./CreateTenderCards/VenderDocRequirement";
+import VendorDocRequirement from "./CreateTenderCards/VendorDocRequirement";
 import KeyDates from "./CreateTenderCards/KeyDates";
 import TenderFeeDetails from "./CreateTenderCards/TenderFeeDetails";
 import TenderPreQualifications from "./CreateTenderCards/TenderPreQualifications";
@@ -11,8 +11,10 @@ import VendorSelection from "./CreateTenderCards/VendorSelection";
 import { createTenderNavData } from "@/lib/CreateTenderConstants";
 import { ITenderFormData, ITenderVendorSelection } from "@/Types/Tender-Types";
 import CreateTenderSkeleton from "@/components/Shared/skeleton/CreateTenderSkeleton";
-import { ICategoryName } from "@/Types/Category-Types";
 import CreateTenderNavbar from "./CreateTenderNavbar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
+import { useGetCategoriesNamesQuery } from "@/Redux/category/categoryApi";
 
 interface Props {
   active: number;
@@ -22,8 +24,6 @@ interface Props {
   handleCreateTender: (data: ITenderFormData) => void;
   isCreatingTender: boolean;
   isSaveTenderLoading: boolean;
-  isCategoriesLoading: boolean;
-  categoriesData: ICategoryName[];
   handleVendorSelectionChange: (
     vendorSelection: ITenderVendorSelection
   ) => void;
@@ -38,11 +38,16 @@ const CreateTender: FC<Props> = ({
   handleCreateTender,
   isCreatingTender,
   isSaveTenderLoading,
-  isCategoriesLoading,
-  categoriesData,
   handleVendorSelectionChange,
   vendorSelection,
 }) => {
+  // pre-saved categories
+  const { categories } = useSelector((state: RootState) => state.categorySlice);
+
+  // load categories from db
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useGetCategoriesNamesQuery({}, { skip: categories.length > 0 });
+
   const progressPercentage = useMemo(() => {
     return Math.round((active / (createTenderNavData.length - 1)) * 100);
   }, [active]);
@@ -55,7 +60,9 @@ const CreateTender: FC<Props> = ({
             setActive={setActive}
             handleSaveTender={handleSaveTender}
             isSavingTender={isSaveTenderLoading}
-            categoriesData={categoriesData}
+            categoriesData={
+              categories.length > 0 ? categories : categoriesData?.categories
+            }
           />
         );
       case 1:
@@ -68,7 +75,7 @@ const CreateTender: FC<Props> = ({
         );
       case 2:
         return (
-          <VenderDocRequirement
+          <VendorDocRequirement
             setActive={setActive}
             handleSaveTender={handleSaveTender}
             isSavingTender={isSaveTenderLoading}
@@ -102,7 +109,9 @@ const CreateTender: FC<Props> = ({
         return (
           <VendorSelection
             setActive={setActive}
-            categoriesData={categoriesData}
+            categoriesData={
+              categories.length > 0 ? categories : categoriesData?.categories
+            }
             vendorSelection={vendorSelection}
             setVendorSelection={handleVendorSelectionChange}
             handleSaveTender={handleSaveTender}
@@ -122,7 +131,8 @@ const CreateTender: FC<Props> = ({
     }
   }, [
     active,
-    categoriesData,
+    categories,
+    categoriesData?.categories,
     form,
     handleSaveTender,
     handleVendorSelectionChange,

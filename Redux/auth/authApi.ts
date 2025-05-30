@@ -3,7 +3,7 @@ import { setUser } from "./authSlice";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    registerVender: builder.mutation({
+    registerVendor: builder.mutation({
       query: (data) => ({
         url: "/auth/register",
         method: "POST",
@@ -45,7 +45,7 @@ export const authApi = api.injectEndpoints({
 });
 
 export const {
-  useRegisterVenderMutation,
+  useRegisterVendorMutation,
   useLoginUserMutation,
   useLogoutQuery,
   useRefreshTokenQuery,

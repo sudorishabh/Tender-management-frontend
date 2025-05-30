@@ -1,29 +1,29 @@
 import { FormProvider, useForm } from "react-hook-form";
 import React, { useState } from "react";
 import BusinessInfo from "./RegistrationForms/BusinessInfo";
-import VenderInfo from "./RegistrationForms/VenderInfo";
-import VenderDocumentsInfo from "./RegistrationForms/VenderDocumentsInfo";
-import { useRegisterVenderMutation } from "@/Redux/auth/authApi";
+import VendorInfo from "./RegistrationForms/VendorInfo";
+import VendorDocumentsInfo from "./RegistrationForms/VendorDocumentsInfo";
+import { useRegisterVendorMutation } from "@/Redux/auth/authApi";
 import { toast } from "sonner";
 import { FileText, LoaderCircle, Building, FileUp, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDeleteFileUrlMutation } from "@/Redux/s3-files/s3-files-Api";
-import { IVenderRegistrationForm } from "@/Types/User-Types";
+import { IVendorRegistrationForm } from "@/Types/User-Types";
 import useUploadFileToS3 from "@/hooks/useUploadFileToS3";
 import { ErrorCodes } from "@/lib/errorCodes";
 import { ApiError } from "@/Types";
 
-const VenderRegistration = () => {
+const VendorRegistration = () => {
   const [active, setActive] = useState(0);
-  const [registerVender, { isLoading: isRegisterVenderLoading }] =
-    useRegisterVenderMutation();
+  const [registerVendor, { isLoading: isRegisterVendorLoading }] =
+    useRegisterVendorMutation();
 
   const router = useRouter();
 
   const [uploadFile, { isLoading: isUploading }] = useUploadFileToS3();
   const [deleteFileUrl] = useDeleteFileUrlMutation();
 
-  const methods = useForm<IVenderRegistrationForm>({
+  const methods = useForm<IVendorRegistrationForm>({
     mode: "onChange",
     defaultValues: {
       fullname: "",
@@ -55,8 +55,8 @@ const VenderRegistration = () => {
 
   const { handleSubmit, reset, trigger } = methods;
 
-  const handleVenderMutate = handleSubmit(
-    async (data: IVenderRegistrationForm) => {
+  const handleVendorMutate = handleSubmit(
+    async (data: IVendorRegistrationForm) => {
       const { panCardDoc, registrationDoc, msmeCertificateDoc, ...restData } =
         data;
       if (!panCardDoc) {
@@ -94,7 +94,7 @@ const VenderRegistration = () => {
           }),
         };
 
-        const result = await registerVender(formData).unwrap();
+        const result = await registerVendor(formData).unwrap();
 
         if (result.success) {
           router.push("/register/successful");
@@ -168,7 +168,7 @@ const VenderRegistration = () => {
     },
   ];
 
-  const isLoading = isRegisterVenderLoading || isUploading;
+  const isLoading = isRegisterVendorLoading || isUploading;
 
   const getProgressPercentage = () => {
     return Math.round((active / (registrationSteps.length - 1)) * 100);
@@ -254,7 +254,7 @@ const VenderRegistration = () => {
 
         <div className='flex-1 max-w-3xl'>
           <div className='bg-white rounded-xl shadow-sm border border-gray-100'>
-            {active === 0 && <VenderInfo handleNextStep={handleNextStep} />}
+            {active === 0 && <VendorInfo handleNextStep={handleNextStep} />}
             {active === 1 && (
               <BusinessInfo
                 handleNextStep={handleNextStep}
@@ -262,9 +262,9 @@ const VenderRegistration = () => {
               />
             )}
             {active === 2 && (
-              <VenderDocumentsInfo
+              <VendorDocumentsInfo
                 handleNextStep={handleNextStep}
-                handleVenderMutate={handleVenderMutate}
+                handleVendorMutate={handleVendorMutate}
                 setActive={setActive}
               />
             )}
@@ -286,4 +286,4 @@ const VenderRegistration = () => {
   );
 };
 
-export default VenderRegistration;
+export default VendorRegistration;

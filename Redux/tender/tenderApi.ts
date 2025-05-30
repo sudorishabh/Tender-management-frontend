@@ -45,28 +45,16 @@ const tenderApi = api.injectEndpoints({
       invalidatesTags: ["SavedTenders"],
     }),
 
-    getLiveTenders: builder.query<
-      LiveTenderResponse,
-      {
-        page: number;
-        limit: number;
-        budgetRange: string;
-        category: string;
-        publishDate: string;
-        status: string;
-        sortBy: string;
-      }
-    >({
+    getLiveTenders: builder.query({
       query: ({
         page = 1,
         limit = 5,
         budgetRange,
         category,
         publishDate,
-        status,
         sortBy,
       }) => ({
-        url: `/tender/live?page=${page}&limit=${limit}&budgetRange=${budgetRange}&category=${category}&publishDate=${publishDate}&status=${status}&sortBy=${sortBy}`,
+        url: `/tender/home-latest?page=${page}&limit=${limit}&budgetRange=${budgetRange}&category=${category}&publishDate=${publishDate}&sortBy=${sortBy}`,
         method: "GET",
       }),
       serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
@@ -95,9 +83,9 @@ const tenderApi = api.injectEndpoints({
       },
     }),
 
-    getTenders: builder.query({
+    getAdminLiveTenders: builder.query({
       query: ({ search, category, department, page = 1, limit = 5 }) => ({
-        url: `/tender/all/?query=${search}&category=${category}&department=${department}&page=${page}&limit=${limit}`,
+        url: `/tender/admin-live-tenders?query=${search}&category=${category}&department=${department}&page=${page}&limit=${limit}`,
         method: "GET",
       }),
       serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
@@ -114,9 +102,9 @@ const tenderApi = api.injectEndpoints({
       },
     }),
 
-    getSingleTender: builder.query({
+    getTenderDetails: builder.query({
       query: (id) => ({
-        url: `/tender/single/${id}`,
+        url: `/tender/details/${id}`,
         method: "GET",
       }),
     }),
@@ -214,9 +202,9 @@ const tenderApi = api.injectEndpoints({
 export const {
   useCreateTenderMutation,
   useSaveTenderMutation,
-  useGetTendersQuery,
+  useGetAdminLiveTendersQuery,
   useGetLiveTendersQuery,
-  useGetSingleTenderQuery,
+  useGetTenderDetailsQuery,
   useGetSavedTenderQuery,
   useGetSavedTendersQuery,
   useGetAssignedTendersQuery,

@@ -10,7 +10,6 @@ interface TenderState {
     category: string;
     budgetRange: string;
     publishDate: string;
-    status: string;
     sortBy: string;
   };
   activeTenderTab: "latest" | "assigned";
@@ -26,8 +25,7 @@ const initialState: TenderState = {
     category: "",
     budgetRange: "",
     publishDate: "",
-    status: "",
-    sortBy: "latest",
+    sortBy: "",
   },
   activeTenderTab: "latest",
 };
@@ -51,9 +49,6 @@ const tenderSlice = createSlice({
     setHomeTenderPublishDate: (state, action: PayloadAction<string>) => {
       state.tenderHomeFilter.publishDate = action.payload;
     },
-    setHomeTenderStatus: (state, action: PayloadAction<string>) => {
-      state.tenderHomeFilter.status = action.payload;
-    },
     setHomeTenderCategory: (state, action: PayloadAction<string>) => {
       state.tenderHomeFilter.category = action.payload;
     },
@@ -75,8 +70,7 @@ const tenderSlice = createSlice({
       state.tenderHomeFilter.category = "";
       state.tenderHomeFilter.budgetRange = "";
       state.tenderHomeFilter.publishDate = "";
-      state.tenderHomeFilter.status = "";
-      state.tenderHomeFilter.sortBy = "latest";
+      state.tenderHomeFilter.sortBy = "";
     },
   },
 });
@@ -89,7 +83,6 @@ export const {
   resetTenderFilterOptions,
   setHomeTenderBudgetRange,
   setHomeTenderPublishDate,
-  setHomeTenderStatus,
   setHomeTenderCategory,
   resetHomeTenderFilterOptions,
   setHomeTenderSortBy,

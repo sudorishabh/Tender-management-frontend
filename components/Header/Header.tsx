@@ -14,7 +14,6 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import SearchResultBox from "./SearchResultBox";
-// import NotificationDropdown from "./NotificationDropdown";
 import HeaderSkeleton from "../Shared/skeleton/HeaderSkeleton";
 
 const Header = () => {

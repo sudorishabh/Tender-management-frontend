@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
-import { useGetTendersQuery } from "@/Redux/tender/tenderApi";
+import { useGetAdminLiveTendersQuery } from "@/Redux/tender/tenderApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 import { ILiveTenders } from "@/Types/Tender-Types";
@@ -19,7 +19,7 @@ const Tenders = () => {
     tenderAdminFilter: { searchQuery, category, department },
   } = useSelector((state: RootState) => state.tenderSlice);
 
-  const { data, isLoading, isFetching, refetch } = useGetTendersQuery({
+  const { data, isLoading, isFetching, refetch } = useGetAdminLiveTendersQuery({
     search: searchQuery,
     category: category,
     department: department,
@@ -28,6 +28,7 @@ const Tenders = () => {
   });
   useEffect(() => {
     const timeout = setTimeout(() => {
+      pageRef.current = 1;
       refetch();
     }, 500);
 

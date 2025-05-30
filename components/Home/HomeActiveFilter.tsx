@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   ArrowUpDown,
@@ -21,7 +22,7 @@ import {
 const HomeActiveFilter = () => {
   const dispatch = useDispatch();
   const {
-    tenderHomeFilter: { category, status, budgetRange, publishDate, sortBy },
+    tenderHomeFilter: { category, budgetRange, publishDate, sortBy },
   } = useSelector((state: RootState) => state.tenderSlice);
   return (
     <div
@@ -31,9 +32,8 @@ const HomeActiveFilter = () => {
       )}>
       <div className='flex flex-wrap gap-2'>
         {category !== "" ||
-        status !== "" ||
         budgetRange !== "" ||
-        sortBy !== "latest" ||
+        sortBy !== "" ||
         publishDate !== "" ? (
           <span
             className='text-xs  bg-gray-50 font-medium text-gray-700 px-1.5 py-1 rounded-full border border-gray-300 inline-flex items-center gap-1 cursor-pointer'
@@ -59,8 +59,6 @@ const HomeActiveFilter = () => {
           <span className='mr-0.5'>Publication Date:</span>
           {publishDate === ""
             ? "All"
-            : publishDate === "today"
-            ? "Today"
             : publishDate === "week"
             ? "This Week"
             : publishDate === "month"
@@ -93,17 +91,17 @@ const HomeActiveFilter = () => {
         <span className='text-xs bg-orange-50 font-medium text-orange-700 px-1.5 rounded-full border border-orange-200 inline-flex items-center gap-1'>
           <ArrowUpDown className='size-3' />
           <span className='mr-0.5'>Sort By:</span>
-          {sortBy === "latest"
+          {sortBy === ""
             ? "Latest"
             : sortBy === "high-to-low"
             ? "Budget (High to Low)"
             : sortBy === "low-to-high"
             ? "Budget (Low to High)"
             : ""}
-          {sortBy !== "latest" && (
+          {sortBy !== "" && (
             <X
               className='h-5 w-5 bg-yellow-200 hover:bg-yellow-300 cursor-pointer rounded-full p-0.5'
-              onClick={() => dispatch(setHomeTenderSortBy("latest"))}
+              onClick={() => dispatch(setHomeTenderSortBy(""))}
             />
           )}
         </span>

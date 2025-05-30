@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
-import { setAgreementForm } from "@/Redux/vendor/venderSlice";
+import { setAgreementForm } from "@/Redux/vendor/vendorSlice";
 import { useRouter } from "next/navigation";
 
 import Agreement from "@/components/Auth/Registration/Agreement";
@@ -18,7 +18,7 @@ const Registration = () => {
     isAcceptPrivacyChecked,
     isBusinessEthicsChecked,
     isTermServiceChecked,
-  } = useSelector((state: RootState) => state.venderSlice);
+  } = useSelector((state: RootState) => state.vendorSlice);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -45,7 +45,7 @@ const Registration = () => {
       isAcceptPrivacyChecked &&
       isBusinessEthicsChecked
     )
-      router.push("/register/vender");
+      router.push("/register/vendor");
   }
 
   const setIsTermServiceChecked = (val: boolean) => {

@@ -1,11 +1,16 @@
-import React from "react";
+import React, { FC } from "react";
 import VendorsTable from "./VendorsTable";
 import { Building, Users, SearchX } from "lucide-react";
 import { IVendorsResponse } from "@/Types/Vendor-Types";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "@/Redux/store";
-import { setManageVendorStatus } from "@/Redux/vendor/venderSlice";
+import {
+  setManageVendorSearch,
+  setManageVendorStatus,
+} from "@/Redux/vendor/vendorSlice";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   data: IVendorsResponse;
@@ -14,10 +19,10 @@ interface Props {
   pageRef: React.MutableRefObject<number>;
 }
 
-const ManageVendors = ({ data, isFetching, refetch, pageRef }: Props) => {
+const ManageVendors: FC<Props> = ({ data, isFetching, refetch, pageRef }) => {
   const dispatch = useDispatch();
-  const { manageVendorStatus } = useSelector(
-    (state: RootState) => state.venderSlice
+  const { manageVendorStatus, manageVendorSearch } = useSelector(
+    (state: RootState) => state.vendorSlice
   );
   return (
     <div>
@@ -41,8 +46,16 @@ const ManageVendors = ({ data, isFetching, refetch, pageRef }: Props) => {
               />
               <h2 className='font-semibold text-gray-900'>Vendors List</h2>
               <div className='flex items-center gap-3'>
+                <Input
+                  placeholder='Search by name, email, or company name'
+                  className='w-[20rem] bg-white rounded-mmd'
+                  value={manageVendorSearch}
+                  onChange={(e) =>
+                    dispatch(setManageVendorSearch(e.target.value))
+                  }
+                />
                 <select
-                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
+                  className='py-[0.45rem] px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
                   value={manageVendorStatus}
                   onChange={(e) =>
                     dispatch(setManageVendorStatus(e.target.value))
@@ -52,21 +65,12 @@ const ManageVendors = ({ data, isFetching, refetch, pageRef }: Props) => {
                   <option value='approved'>Approved</option>
                   <option value='rejected'>Rejected</option>
                 </select>
-                {/* <select
-                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
-                  value={manageVendorCategory}
-                  onChange={(e) =>
-                    dispatch(setManageVendorCategory(e.target.value))
-                  }>
-                  <option value='all'>Sort by Category</option>
-                  {categoryData?.map((category) => (
-                    <option
-                      key={category.name}
-                      value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select> */}
+
+                <Button
+                  variant='outline'
+                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'>
+                  Reset
+                </Button>
               </div>
             </div>
             <div className='flex items-center gap-2 text-sm text-gray-500'>

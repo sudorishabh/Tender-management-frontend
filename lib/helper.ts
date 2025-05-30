@@ -4,7 +4,7 @@ import {
   ITenderFeeDetails,
   ITenderPreQualification,
   ITenderSupportDocument,
-  IVenderDocRequirement,
+  IVendorDocRequirement,
 } from "@/Types/Tender-Types";
 // import { toast } from "sonner";
 
@@ -24,7 +24,7 @@ export const validateTenderData = (data: {
   keyDates: IKeyDate;
   tenderFeeDetails: ITenderFeeDetails;
   tenderSupportDocuments: ITenderSupportDocument[];
-  venderDocRequirement: IVenderDocRequirement[];
+  vendorDocRequirement: IVendorDocRequirement[];
   tenderPreQualifications: ITenderPreQualification[];
 }): boolean => {
   // Item Info validation
@@ -84,11 +84,11 @@ export const validateTenderData = (data: {
   }
 
   // Vendor Document Requirements validation
-  const venderDocRequirement = data.venderDocRequirement;
-  if (venderDocRequirement.length === 0) {
+  const vendorDocRequirement = data.vendorDocRequirement;
+  if (vendorDocRequirement.length === 0) {
     return false;
   }
-  for (const doc of venderDocRequirement) {
+  for (const doc of vendorDocRequirement) {
     if (!doc.name || !doc.type || !doc.purpose) {
       return false;
     }

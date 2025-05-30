@@ -4,14 +4,12 @@ import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
 import dynamic from "next/dynamic";
 import CreateTenderSkeleton from "@/components/Shared/skeleton/CreateTenderSkeleton";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/Redux/store";
 import {
   useCreateTenderMutation,
   useGetSavedTenderQuery,
   useSaveTenderMutation,
 } from "@/Redux/tender/tenderApi";
 import { toast } from "sonner";
-import { useGetCategoriesNamesQuery } from "@/Redux/category/categoryApi";
 import { useDeleteFileUrlMutation } from "@/Redux/s3-files/s3-files-Api";
 import { useSearchParams } from "next/navigation";
 import {
@@ -24,7 +22,6 @@ import {
   ITenderVendorSelection,
 } from "@/Types/Tender-Types";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
 import { ErrorCodes } from "@/lib/errorCodes";
 import useUploadFileToS3 from "@/hooks/useUploadFileToS3";
 import { ApiError } from "@/Types";
@@ -54,13 +51,6 @@ const Create = () => {
     defaultValues: tenderFromDefaultValues,
     mode: "onChange",
   });
-
-  // pre-saved categories
-  const { categories } = useSelector((state: RootState) => state.categorySlice);
-
-  // load categories from db
-  const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useGetCategoriesNamesQuery({}, { skip: categories.length > 0 });
 
   // load saved tender data
   const { data: savedTenderData } = useGetSavedTenderQuery(id, {
@@ -141,7 +131,7 @@ const Create = () => {
             document: doc.doc_s3_name || "",
           })
         ) || [{ documentName: "", documentPurpose: "", document: "" }],
-        venderDocRequirement: savedTenderData?.bidderDocumentsReq?.map(
+        vendorDocRequirement: savedTenderData?.bidderDocumentsReq?.map(
           (doc: IBidderDocumentsReqResponse) => ({
             name: doc.name || "",
             type: doc.format || "",
@@ -197,7 +187,7 @@ const Create = () => {
         keyDates,
         tenderFeeDetails,
         tenderSupportDocuments,
-        venderDocRequirement,
+        vendorDocRequirement,
         tenderPreQualifications,
       } = formValues;
 
@@ -268,7 +258,7 @@ const Create = () => {
         keyDates,
         tenderFeeDetails,
         tenderSupportDocuments: tenderSupportDocumentsNames,
-        venderDocRequirement,
+        vendorDocRequirement,
         tenderPreQualifications,
         vendorSelection,
       };
@@ -398,10 +388,6 @@ const Create = () => {
         handleCreateTender={handleCreateTender}
         isCreatingTender={isCreatingTender}
         isSaveTenderLoading={isSaveTenderLoading}
-        isCategoriesLoading={isCategoriesLoading}
-        categoriesData={
-          categories.length > 0 ? categories : categoriesData?.categories
-        }
         handleVendorSelectionChange={handleVendorSelectionChange}
         vendorSelection={vendorSelection}
       />

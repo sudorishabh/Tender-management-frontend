@@ -133,17 +133,6 @@ const SearchResultBox = () => {
                     </div>
                   </div>
                 ))}
-                <div className='mt-2 pt-2 border-t border-gray-100 px-3'>
-                  <Button
-                    variant='ghost'
-                    className='text-xs text-accent w-full justify-center py-1 h-auto'
-                    onClick={() => {
-                      router.push("/");
-                      setIsSearchFocused(false);
-                    }}>
-                    View All Results
-                  </Button>
-                </div>
               </>
             ) : (
               <div className='flex flex-col items-center justify-center py-8 px-4 text-center'>

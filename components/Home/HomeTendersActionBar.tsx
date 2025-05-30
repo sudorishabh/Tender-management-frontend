@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,25 +31,29 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setHomeTenderBudgetRange,
   setHomeTenderPublishDate,
-  setHomeTenderStatus,
   setHomeTenderCategory,
   setHomeTenderSortBy,
 } from "@/Redux/tender/tenderSlice";
 import { RootState } from "@/Redux/store";
 import { ICategoryName } from "@/Types/Category-Types";
 import { capitalizeFirstLetter } from "@/lib/helper";
+import { useGetCategoriesNamesQuery } from "@/Redux/category/categoryApi";
+import { setCategories } from "@/Redux/category/categorySlice";
 
-const HomeTendersActionBar = ({
-  categories,
-  isCategoriesLoading,
-}: {
-  categories: ICategoryName[];
-  isCategoriesLoading: boolean;
-}) => {
+const HomeTendersActionBar = () => {
   const dispatch = useDispatch();
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useGetCategoriesNamesQuery({});
   const {
-    tenderHomeFilter: { category, budgetRange, publishDate, status, sortBy },
+    tenderHomeFilter: { category, budgetRange, publishDate, sortBy },
   } = useSelector((state: RootState) => state.tenderSlice);
+
+  useEffect(() => {
+    if (categoriesData) {
+      dispatch(setCategories(categoriesData));
+    }
+  }, [categoriesData, dispatch]);
+
   return (
     <div
       className={cn(
@@ -72,13 +77,15 @@ const HomeTendersActionBar = ({
                   <SelectLabel className='text-gray-500'>
                     Categories
                   </SelectLabel>
-                  {categories?.map((category) => (
-                    <SelectItem
-                      key={category.id}
-                      value={category.name}>
-                      {capitalizeFirstLetter(category.name)}
-                    </SelectItem>
-                  ))}
+                  {categoriesData?.categories?.map(
+                    (category: ICategoryName) => (
+                      <SelectItem
+                        key={category.id}
+                        value={category.name}>
+                        {capitalizeFirstLetter(category.name)}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectGroup>
               </SelectContent>
             ) : (
@@ -133,8 +140,8 @@ const HomeTendersActionBar = ({
             <DropdownMenuItem className='flex items-center gap-2 cursor-pointer'>
               <span className='w-32'>Status</span>
               <Select
-                onValueChange={(value) => dispatch(setHomeTenderStatus(value))}
-                value={status}
+                // onValueChange={(value) => dispatch(setHomeTenderStatus(value))}
+                value={""}
                 disabled={true}>
                 <SelectTrigger className='h-7 min-h-0 ml-auto w-28 text-xs rounded-mmd'>
                   <SelectValue placeholder='Any' />
@@ -155,7 +162,6 @@ const HomeTendersActionBar = ({
                   <SelectValue placeholder='Any' />
                 </SelectTrigger>
                 <SelectContent className='z-[800] rounded-mmd'>
-                  <SelectItem value='today'>Today</SelectItem>
                   <SelectItem value='week'>This Week</SelectItem>
                   <SelectItem value='month'>This Month</SelectItem>
                 </SelectContent>
@@ -186,10 +192,10 @@ const HomeTendersActionBar = ({
             sideOffset={8}>
             <DropdownMenuItem
               className={`flex items-center gap-2 cursor-pointer ${
-                sortBy === "latest" ? "text-blue-600" : ""
+                sortBy === "" ? "text-blue-600" : ""
               } font-medium`}
-              onClick={() => dispatch(setHomeTenderSortBy("latest"))}>
-              {sortBy === "latest" ? (
+              onClick={() => dispatch(setHomeTenderSortBy(""))}>
+              {sortBy === "" ? (
                 <ArrowRight className='h-3.5 w-3.5' />
               ) : (
                 <ArrowRight className='h-3.5 w-3.5 opacity-0' />

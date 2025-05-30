@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { capitalizeFirstLetter } from "@/lib/helper";
 import {
   useGetVendorDetailsQuery,
-  useUploadVendorByAdminMutation,
+  useUpdateVendorStatusMutation,
 } from "@/Redux/vendor/vendorApi";
 import { useRouter } from "next/navigation";
 import InfoCard from "@/components/Shared/InfoCard";
@@ -53,9 +53,12 @@ interface VendorData {
     email: string;
     role: string;
     status: string;
-    phoneNumber: string;
+    contactNumber: string;
+    alternateContact: string;
     panCardNumber: string;
-    panCardDoc: string;
+    panCardS3Name: string;
+    vendorCode: string;
+    profileImage: string;
     createdAt: string;
   };
   business: {
@@ -70,8 +73,9 @@ interface VendorData {
     city: string;
     pinCode: string;
     country: string;
-    registrationDoc: string;
-    msmeCertificate: string;
+    state: string;
+    registrationDocS3Name: string;
+    msmeCertificateS3Name: string;
     website: string;
     companyEmail: string;
     gstNumber: string;
@@ -104,8 +108,8 @@ const InfoItem: React.FC<InfoItemProps> = ({ label, value, isUrl = false }) => {
 
 const VendorPreview: FC<Props> = ({ vendorId }) => {
   const { data, isLoading, isError } = useGetVendorDetailsQuery(vendorId);
-  const [updateVendor, { isLoading: isUpdating }] =
-    useUploadVendorByAdminMutation();
+  const [updateVendorStatus, { isLoading: isUpdating }] =
+    useUpdateVendorStatusMutation();
 
   const router = useRouter();
 
@@ -122,14 +126,11 @@ const VendorPreview: FC<Props> = ({ vendorId }) => {
 
     try {
       const updatedUserData = {
-        user: {
-          ...user,
-          status: newStatus,
-        },
-        business: business,
+        vendorId: vendorId,
+        status: newStatus,
       };
 
-      const result = await updateVendor(updatedUserData).unwrap();
+      const result = await updateVendorStatus(updatedUserData).unwrap();
       if (result.success) {
         toast.success("Vendor status updated successfully");
       } else {
@@ -200,7 +201,7 @@ const VendorPreview: FC<Props> = ({ vendorId }) => {
             <div className='space-y-3 text-sm'>
               <div className='flex items-center'>
                 <Phone className='h-4 w-4 mr-2 text-gray-900 ' />
-                <span className='text-gray-900'>{user?.phoneNumber}</span>
+                <span className='text-gray-900'>{user?.contactNumber}</span>
               </div>
               <div className='flex items-center'>
                 <Mail className='h-4 w-4 mr-2 text-gray-900 ' />
@@ -291,7 +292,15 @@ const VendorPreview: FC<Props> = ({ vendorId }) => {
             />
             <InfoItem
               label='Contact Number'
-              value={user?.phoneNumber}
+              value={user?.contactNumber}
+            />
+            <InfoItem
+              label='Vendor Code'
+              value={user?.vendorCode}
+            />
+            <InfoItem
+              label='Alternate Contact Number'
+              value={user?.alternateContact}
             />
             <InfoItem
               label='PAN Card Number'
@@ -299,7 +308,7 @@ const VendorPreview: FC<Props> = ({ vendorId }) => {
             />
             <InfoItem
               label='PAN Card Document'
-              value={user?.panCardDoc}
+              value={user?.panCardS3Name}
               isUrl
             />
             <InfoItem
@@ -334,48 +343,42 @@ const VendorPreview: FC<Props> = ({ vendorId }) => {
               label='Established Year'
               value={business?.establishedYear}
             />
-            {business?.website && (
-              <InfoItem
-                label='Website'
-                value={business?.website}
-              />
-            )}
-            {business?.companyEmail && (
-              <InfoItem
-                label='Company Email'
-                value={business?.companyEmail}
-              />
-            )}
-            {business?.gstNumber && (
-              <InfoItem
-                label='GST Number'
-                value={business?.gstNumber}
-              />
-            )}
-            {business?.companyPhone && (
-              <InfoItem
-                label='Company Phone'
-                value={business?.companyPhone}
-              />
-            )}
-            {business?.annualTurnover && (
-              <InfoItem
-                label='Annual Turnover'
-                value={business?.annualTurnover}
-              />
-            )}
+
+            <InfoItem
+              label='Website'
+              value={business?.website}
+            />
+
+            <InfoItem
+              label='GST Number'
+              value={business?.gstNumber}
+            />
+
+            <InfoItem
+              label='Company Email'
+              value={business?.companyEmail}
+            />
+            <InfoItem
+              label='Company Phone'
+              value={business?.companyPhone}
+            />
+
+            <InfoItem
+              label='Annual Turnover'
+              value={business?.annualTurnover}
+            />
+
             <InfoItem
               label='Registration Document'
-              value={business?.registrationDoc}
+              value={business?.registrationDocS3Name}
               isUrl
             />
-            {business?.msmeCertificate && (
-              <InfoItem
-                label='MSME Certificate'
-                value={business?.msmeCertificate}
-                isUrl
-              />
-            )}
+
+            <InfoItem
+              label='MSME Certificate'
+              value={business?.msmeCertificateS3Name}
+              isUrl
+            />
           </InfoCard>
 
           <InfoCard title='Business Address'>
@@ -398,6 +401,10 @@ const VendorPreview: FC<Props> = ({ vendorId }) => {
             <InfoItem
               label='PIN Code'
               value={business?.pinCode}
+            />
+            <InfoItem
+              label='State'
+              value={capitalizeFirstLetter(business?.state)}
             />
             <InfoItem
               label='Country'

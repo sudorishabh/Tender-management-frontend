@@ -1,4 +1,4 @@
-import { IVenderRegistrationForm } from "@/Types/User-Types";
+import { IVendorRegistrationForm } from "@/Types/User-Types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Info, Mail, Phone, User, CreditCard, Lock } from "lucide-react";
@@ -16,7 +16,7 @@ const VendorInfo: FC<Props> = ({ handleNextStep }) => {
     formState: { errors },
     watch,
     trigger,
-  } = useFormContext<IVenderRegistrationForm>();
+  } = useFormContext<IVendorRegistrationForm>();
 
   const password = watch("password");
 
@@ -31,7 +31,7 @@ const VendorInfo: FC<Props> = ({ handleNextStep }) => {
       "confirmPassword",
     ];
     const result = await trigger(
-      fieldsToValidate as (keyof IVenderRegistrationForm)[]
+      fieldsToValidate as (keyof IVendorRegistrationForm)[]
     );
 
     if (result) {

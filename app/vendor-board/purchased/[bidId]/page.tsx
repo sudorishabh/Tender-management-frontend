@@ -10,8 +10,8 @@ const Details = () => {
     <div className='pt-[3.8rem]'>
       <Heading
         title='TERI - Tender Management'
-        description='A platform for venders to bid'
-        keywords='Tender, Vender, Projects'
+        description='A platform for vendors to bid'
+        keywords='Tender, Vendor, Projects'
       />
       {/* <BidDetails  /> */}
     </div>

@@ -46,7 +46,6 @@ const VendorEdit: FC<Props> = ({ vendorId, data, active, setActive }) => {
             onClick={() => setActive(0)}>
             Information
           </button>
-          {/* {data && data?.category?.is_sub_category !== true ? ( */}
           <button
             className={`py-4 px-6 ${
               active === 1 ? "border-b-2 font-semibold border-primary" : ""
@@ -55,7 +54,6 @@ const VendorEdit: FC<Props> = ({ vendorId, data, active, setActive }) => {
             onClick={() => setActive(1)}>
             Category
           </button>
-          {/* ) : null} */}
         </div>
 
         <div>

@@ -38,7 +38,7 @@ export interface ITenderSupportDocument {
   document: Blob | File | string;
 }
 
-export interface IVenderDocRequirement {
+export interface IVendorDocRequirement {
   name: string;
   type: string;
   purpose: string;
@@ -79,7 +79,7 @@ export interface ITenderFormData {
   };
   tenderFeeDetails: ITenderFeeDetails;
   tenderSupportDocuments: ITenderSupportDocument[];
-  venderDocRequirement: IVenderDocRequirement[];
+  vendorDocRequirement: IVendorDocRequirement[];
   tenderPreQualifications: ITenderPreQualification[];
 }
 

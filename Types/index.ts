@@ -96,7 +96,7 @@ export interface IBusinessInfo {
   registrationDoc: string;
 }
 
-export interface IVenderCategory {
+export interface IVendorCategory {
   id: string;
   status: string;
   category: string;

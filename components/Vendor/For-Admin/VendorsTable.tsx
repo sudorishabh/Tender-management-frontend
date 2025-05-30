@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, FilePenLine } from "lucide-react";
+import { Eye, FilePenLine, Mail } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
 import { capitalizeFirstLetter } from "@/lib/helper";
@@ -39,7 +39,7 @@ const VendorsTable: FC<Props> = ({
 }) => {
   return (
     <div className='bg-gray-50 p-5 rounded-lg'>
-      <ScrollArea className='h-[440px] flex pr-1'>
+      <ScrollArea className='h-[calc(100vh-21rem)] flex pr-1'>
         <Table>
           <TableHeader>
             <TableRow>
@@ -47,9 +47,9 @@ const VendorsTable: FC<Props> = ({
               <TableHead>Full Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Company Name</TableHead>
-              <TableHead>Company Type</TableHead>
               <TableHead className='text-center w-24'>Details</TableHead>
               <TableHead className='text-center w-24'>Edit</TableHead>
+              <TableHead className='text-center'>Email</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,18 +87,22 @@ const VendorsTable: FC<Props> = ({
                         {capitalizeFirstLetter(vendor.status)}
                       </span>
                     </TableCell>
-                    <TableCell className='text-gray-900'>
-                      {capitalizeFirstLetter(vendor.fullname)}
+                    <TableCell className='text-gray-900 w-[8rem]'>
+                      <div className='truncate max-w-[8rem]'>
+                        {capitalizeFirstLetter(vendor.fullname)}
+                      </div>
                     </TableCell>
-                    <TableCell className='text-gray-900'>
-                      {vendor.email}
+                    <TableCell className='text-gray-900 w-[12rem]'>
+                      <div className='truncate max-w-[12rem]'>
+                        {vendor.email}
+                      </div>
                     </TableCell>
-                    <TableCell className='text-gray-900'>
-                      {vendor.businessName}
+                    <TableCell className='text-gray-900 w-[15rem]'>
+                      <div className='truncate max-w-[15rem]'>
+                        {vendor.businessName}
+                      </div>
                     </TableCell>
-                    <TableCell className='text-gray-900'>
-                      {vendor.businessClassification}
-                    </TableCell>
+
                     <TableCell className='text-center'>
                       <Link href={`/admin/vendors/${vendor.id}`}>
                         <Button
@@ -118,6 +122,14 @@ const VendorsTable: FC<Props> = ({
                           <FilePenLine className='size-3.5' /> Edit
                         </Button>
                       </Link>
+                    </TableCell>
+                    <TableCell className='text-center w-[3rem]'>
+                      <Button
+                        variant='ghost'
+                        size='sm'
+                        className='w-full text-accent bg-accent/5 hover:bg-accent/10 hover:text-accent'>
+                        <Mail className='size-3.5' />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

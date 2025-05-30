@@ -34,13 +34,11 @@ interface FormData {
     id: string;
     fullname: string;
     status: string;
-    phoneNumber: string;
-    panCardNumber: string;
+    contactNumber: string;
   };
   business: {
     id: string;
     businessName: string;
-    registrationNumber: string;
     establishedYear: string;
     addressLineOne: string;
     addressLineTwo: string;
@@ -48,6 +46,9 @@ interface FormData {
     city: string;
     pinCode: string;
     country: string;
+    website: string;
+    companyEmail: string;
+    companyPhone: string;
   };
 }
 
@@ -55,24 +56,17 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
   const router = useRouter();
   const [updateVendor, { isLoading: isSubmitting }] =
     useUploadVendorByAdminMutation();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { register, handleSubmit, watch, reset } = useForm<FormData>({
     defaultValues: {
       user: {
         id: "",
         fullname: "",
-        phoneNumber: "",
-        panCardNumber: "",
+        contactNumber: "",
       },
       business: {
         id: "",
         businessName: "",
-        registrationNumber: "",
+
         establishedYear: "",
         addressLineOne: "",
         addressLineTwo: "",
@@ -80,6 +74,9 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
         city: "",
         pinCode: "",
         country: "",
+        website: "",
+        companyEmail: "",
+        companyPhone: "",
       },
     },
   });
@@ -92,13 +89,12 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
         user: {
           id: vendorDetails.user.id.toString(),
           fullname: vendorDetails.user.fullname,
-          phoneNumber: vendorDetails.user.phoneNumber,
-          panCardNumber: vendorDetails.user.panCardNumber,
+          contactNumber: vendorDetails.user.contactNumber,
         },
         business: {
           id: vendorDetails.business.id.toString(),
           businessName: vendorDetails.business.businessName,
-          registrationNumber: vendorDetails.business.registrationNumber,
+
           establishedYear: vendorDetails.business.establishedYear,
           addressLineOne: vendorDetails.business.addressLineOne,
           addressLineTwo: vendorDetails.business.addressLineTwo,
@@ -106,39 +102,39 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
           city: vendorDetails.business.city,
           pinCode: vendorDetails.business.pinCode,
           country: vendorDetails.business.country,
+          website: vendorDetails.business.website,
+          companyEmail: vendorDetails.business.companyEmail,
+          companyPhone: vendorDetails.business.companyPhone,
         },
       });
     }
   }, [data, reset]);
 
-  const showErrorMessage = (fieldName: string) => {
-    const getNestedError = (path: string) => {
-      const parts = path.split(".");
-      let current: Record<string, unknown> = errors;
+  // const showErrorMessage = (fieldName: string) => {
+  //   const getNestedError = (path: string) => {
+  //     const parts = path.split(".");
+  //     let current: Record<string, unknown> = errors;
 
-      for (const part of parts) {
-        if (!current || typeof current !== "object") return undefined;
-        current = current[part] as Record<string, unknown>;
-      }
+  //     for (const part of parts) {
+  //       if (!current || typeof current !== "object") return undefined;
+  //       current = current[part] as Record<string, unknown>;
+  //     }
 
-      return current;
-    };
+  //     return current;
+  //   };
 
-    const error = getNestedError(fieldName);
-    return error ? (
-      <p className='text-red-600 text-[0.85rem] ml-0.5 mt-1'>
-        {error.message as string}
-      </p>
-    ) : null;
-  };
+  //   const error = getNestedError(fieldName);
+  //   return error ? (
+  //     <p className='text-red-600 text-[0.85rem] ml-0.5 mt-1'>
+  //       {error.message as string}
+  //     </p>
+  //   ) : null;
+  // };
 
   async function onSubmit(formData: FormData) {
     try {
       const updatedUserData = {
-        user: {
-          ...formData.user,
-          status: data?.vendorDetails?.user?.status,
-        },
+        user: formData.user,
         business: formData.business,
       };
 
@@ -199,8 +195,6 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
     label,
     name,
     register: registerFn,
-    errorField,
-    required = false,
     className = "",
   }: {
     label: string;
@@ -214,14 +208,13 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
       <label
         className='block text-sm font-medium text-gray-700 mb-1'
         htmlFor={name}>
-        {label} {required && <span className='text-red-500'>*</span>}
+        {label}
       </label>
       <Input
         id={name}
         className='w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
         {...registerFn}
       />
-      {showErrorMessage(errorField)}
     </div>
   );
 
@@ -262,31 +255,15 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
                 <FormField
                   label='Full Name'
                   name='full_name'
-                  register={register("user.fullname", {
-                    required: "Full name is required",
-                  })}
+                  register={register("user.fullname")}
                   errorField='user.fullname'
-                  required
                 />
 
                 <FormField
                   label='Contact Number'
                   name='contact_number'
-                  register={register("user.phoneNumber", {
-                    required: "Contact number is required",
-                  })}
-                  errorField='user.phoneNumber'
-                  required
-                />
-
-                <FormField
-                  label='PAN Card Number'
-                  name='pan_card_number'
-                  register={register("user.panCardNumber", {
-                    required: "PAN card number is required",
-                  })}
-                  errorField='user.panCardNumber'
-                  required
+                  register={register("user.contactNumber")}
+                  errorField='user.contactNumber'
                 />
               </div>
             </CardContent>
@@ -303,31 +280,36 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
                 <FormField
                   label='Business Name'
                   name='business_name'
-                  register={register("business.businessName", {
-                    required: "Business name is required",
-                  })}
+                  register={register("business.businessName")}
                   errorField='business.businessName'
-                  required
-                />
-
-                <FormField
-                  label='Registration Number'
-                  name='registration_number'
-                  register={register("business.registrationNumber", {
-                    required: "Registration number is required",
-                  })}
-                  errorField='business.registrationNumber'
-                  required
                 />
 
                 <FormField
                   label='Established Year'
                   name='established_year'
-                  register={register("business.establishedYear", {
-                    required: "Established year is required",
-                  })}
+                  register={register("business.establishedYear")}
                   errorField='business.establishedYear'
-                  required
+                />
+
+                <FormField
+                  label='Website'
+                  name='website'
+                  register={register("business.website")}
+                  errorField='business.website'
+                />
+
+                <FormField
+                  label='Company Email'
+                  name='company_email'
+                  register={register("business.companyEmail")}
+                  errorField='business.companyEmail'
+                />
+
+                <FormField
+                  label='Company Phone'
+                  name='company_phone'
+                  register={register("business.companyPhone")}
+                  errorField='business.companyPhone'
                 />
               </div>
             </CardContent>
@@ -348,7 +330,6 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
                     required: "Address line 1 is required",
                   })}
                   errorField='business.addressLineOne'
-                  required
                 />
 
                 <FormField
@@ -362,41 +343,29 @@ const EditVendorInfo: FC<Props> = ({ data }) => {
                   <FormField
                     label='Locality'
                     name='locality'
-                    register={register("business.locality", {
-                      required: "Locality is required",
-                    })}
+                    register={register("business.locality")}
                     errorField='business.locality'
-                    required
                   />
 
                   <FormField
                     label='City'
                     name='city'
-                    register={register("business.city", {
-                      required: "City is required",
-                    })}
+                    register={register("business.city")}
                     errorField='business.city'
-                    required
                   />
 
                   <FormField
                     label='PIN Code'
                     name='pin_code'
-                    register={register("business.pinCode", {
-                      required: "PIN code is required",
-                    })}
+                    register={register("business.pinCode")}
                     errorField='business.pinCode'
-                    required
                   />
 
                   <FormField
                     label='Country'
                     name='country'
-                    register={register("business.country", {
-                      required: "Country is required",
-                    })}
+                    register={register("business.country")}
                     errorField='business.country'
-                    required
                   />
                 </div>
               </div>

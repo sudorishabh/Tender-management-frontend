@@ -1,17 +1,17 @@
 "use client";
-import VenderRegistration from "@/components/Auth/Registration/VenderRegistration";
+import VendorRegistration from "@/components/Auth/Registration/VendorRegistration";
 import { RootState } from "@/Redux/store";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { isAgreementValid } from "@/Redux/vendor/venderSlice";
+import { isAgreementValid } from "@/Redux/vendor/vendorSlice";
 
-const VenderAgreement = () => {
+const VendorAgreement = () => {
   const router = useRouter();
-  const venderRegistrationSlice = useSelector(
-    (state: RootState) => state.venderSlice
+  const vendorRegistrationSlice = useSelector(
+    (state: RootState) => state.vendorSlice
   );
-  const isAgreement = isAgreementValid(venderRegistrationSlice);
+  const isAgreement = isAgreementValid(vendorRegistrationSlice);
 
   useEffect(() => {
     if (!isAgreement) {
@@ -23,7 +23,7 @@ const VenderAgreement = () => {
     return null;
   }
 
-  return <VenderRegistration />;
+  return <VendorRegistration />;
 };
 
-export default VenderAgreement;
+export default VendorAgreement;

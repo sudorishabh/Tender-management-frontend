@@ -10,7 +10,7 @@ import {
 import React, { FC, useState } from "react";
 import CategoryInfo from "@/components/Categories/For-Admin/CategoryDetailsCards/CategoryInfo";
 import ChildCategory from "@/components/Categories/For-Admin/CategoryDetailsCards/ChildCategory";
-import CategoryVenders from "@/components/Categories/For-Admin/CategoryDetailsCards/CategoryVenders";
+import CategoryVendors from "@/components/Categories/For-Admin/CategoryDetailsCards/CategoryVendors";
 import CategoryTenders from "@/components/Categories/For-Admin/CategoryDetailsCards/CategoryTenders";
 import { useGetCategoryQuery } from "@/Redux/category/categoryApi";
 import { useRouter } from "next/navigation";
@@ -137,7 +137,7 @@ const CategoryDetails: FC<Props> = ({ categoryId }) => {
         )}
         {active ===
           (data && data?.category?.is_sub_category !== true ? 2 : 1) && (
-          <CategoryVenders categoryId={categoryId} />
+          <CategoryVendors categoryId={categoryId} />
         )}
         {active ===
           (data && data?.category?.is_sub_category !== true ? 3 : 2) && (

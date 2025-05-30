@@ -12,11 +12,11 @@ const ManageVendors = dynamic(
   () => import("@/components/Vendor/For-Admin/ManageVendors")
 );
 
-const Venders = () => {
+const Vendors = () => {
   const pageRef = useRef(1);
 
-  const { manageVendorStatus, manageVendorCategory } = useSelector(
-    (state: RootState) => state.venderSlice
+  const { manageVendorStatus, manageVendorSearch } = useSelector(
+    (state: RootState) => state.vendorSlice
   );
 
   // const { categories } = useSelector((state: RootState) => state.categorySlice);
@@ -27,18 +27,22 @@ const Venders = () => {
   //     skip: !categories,
   //   }
   // );
-
+  console.log(manageVendorStatus, manageVendorSearch);
   const { data, isLoading, isFetching, refetch } = useGetVendorsQuery({
     page: pageRef.current,
     limit: 10,
     status: manageVendorStatus,
-    category: manageVendorCategory,
+    search: manageVendorSearch,
   });
 
   useEffect(() => {
-    pageRef.current = 1;
-    refetch();
-  }, [manageVendorStatus, manageVendorCategory, refetch]);
+    const timeout = setTimeout(() => {
+      pageRef.current = 1;
+      refetch();
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [manageVendorStatus, manageVendorSearch, refetch]);
 
   if (isLoading) return <AdminManageVendorSkeleton />;
 
@@ -57,4 +61,4 @@ const Venders = () => {
   );
 };
 
-export default Venders;
+export default Vendors;

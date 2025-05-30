@@ -37,8 +37,8 @@ const Buy = ({ params }: { params: Promise<{ id: string }> }) => {
     <div className='pt-[3.5rem]'>
       <Heading
         title='TERI - Tender Management'
-        description='A platform for venders to bid'
-        keywords='Tender, Vender, Projects'
+        description='A platform for vendors to bid'
+        keywords='Tender, Vendor, Projects'
       />
       <BuyTender tenderId={id} />
     </div>

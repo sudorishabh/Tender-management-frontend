@@ -107,7 +107,7 @@ const ReviewedBids = ({
                     size={16}
                     className='text-gray-400'
                   />
-                  <span>Total Selected Bids: ${selectedBids?.bids.length}</span>
+                  <span>Total Selected Bids: {selectedBids?.bids.length}</span>
                 </div>
                 <Button
                   className={cn(secondaryButtonStyle2, "h-8")}
@@ -157,7 +157,7 @@ const ReviewedBids = ({
                     size={16}
                     className='text-gray-400'
                   />
-                  <span>Total Rejected Bids: ${selectedBids?.bids.length}</span>
+                  <span>Total Rejected Bids: {selectedBids?.bids.length}</span>
                 </div>
               </div>
             </div>

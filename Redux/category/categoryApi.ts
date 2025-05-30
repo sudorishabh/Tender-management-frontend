@@ -1,12 +1,53 @@
 import { api } from "../api";
 
+export interface ICategoriesRes {
+  categories: {
+    created_at: string;
+    description: string | null;
+    id: number;
+    is_sub_category: boolean;
+    name: string;
+    scope: string;
+    short_name: string;
+    status: string;
+    sub_category_main: string | null;
+    type: string;
+    updated_at: string;
+  }[];
+  hasMore: boolean;
+  page: number;
+  success: boolean;
+  totalCategories: number;
+}
+
 const categoryApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query({
-      query: () => ({
-        url: `/category/all`,
+      query: ({ page = 1, limit = 10, search }) => ({
+        url: `/category/admin-all?page=${page}&limit=${limit}&search=${search}`,
         method: "GET",
       }),
+      serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
+        return endpointName;
+      },
+      merge: (currentCache: ICategoriesRes, newItems: ICategoriesRes) => {
+        if (newItems.page === 1) {
+          return newItems;
+        }
+        return {
+          ...newItems,
+          categories: [...currentCache.categories, ...newItems.categories],
+        };
+      },
+      forceRefetch({
+        currentArg,
+        previousArg,
+      }: {
+        currentArg?: { page: number; limit: number };
+        previousArg?: { page: number; limit: number };
+      }) {
+        return currentArg?.page !== previousArg?.page;
+      },
       providesTags: ["get_categories"],
     }),
     getCategoriesParentsName: builder.query({

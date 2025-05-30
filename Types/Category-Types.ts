@@ -39,11 +39,12 @@ export interface ICategoryAddUpdateData {
   type: string;
   scope: string;
   status: string;
+  shortName: string;
   isSubCategory: boolean;
   subCategoryMain: string | null;
 }
 
-export interface IVenderCategoryTable {
+export interface IVendorCategoryTable {
   id: number;
   status: string;
   category_id: number;

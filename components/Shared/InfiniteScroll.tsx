@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { LoaderCircle } from "lucide-react";
 import React, { FC, useEffect, useRef } from "react";
 
 interface Props {
@@ -62,9 +61,7 @@ const InfiniteScroll: FC<Props> = ({
         id='sentinel'
         style={{ height: "20px" }}
       />
-      {isFetching && (
-        <LoaderCircle className='mx-auto text-gray-600 animate-spin' />
-      )}
+      {isFetching && <p>Loading more...</p>}
     </div>
   );
 };

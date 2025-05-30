@@ -56,9 +56,7 @@ const ItemInfo: FC<Props> = ({
     setValue,
   } = useFormContext();
 
-  // Helper function to safely get error messages
   const getErrorMessage = (path: string) => {
-    // Access errors safely using lodash-like get method
     return path
       .split(".")
       .reduce<Record<string, unknown> | null>(

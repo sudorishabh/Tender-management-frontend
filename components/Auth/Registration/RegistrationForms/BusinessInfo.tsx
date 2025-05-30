@@ -1,4 +1,4 @@
-import { IVenderRegistrationForm } from "@/Types/User-Types";
+import { IVendorRegistrationForm } from "@/Types/User-Types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,7 +35,7 @@ const BusinessInfo: FC<Props> = ({ handleNextStep, setActive }) => {
     control,
     formState: { errors },
     trigger,
-  } = useFormContext<IVenderRegistrationForm>();
+  } = useFormContext<IVendorRegistrationForm>();
 
   const years = Array.from(
     { length: new Date().getFullYear() - 1949 },
@@ -61,7 +61,7 @@ const BusinessInfo: FC<Props> = ({ handleNextStep, setActive }) => {
       "annualTurnover",
     ];
     const result = await trigger(
-      fieldsToValidate as (keyof IVenderRegistrationForm)[]
+      fieldsToValidate as (keyof IVendorRegistrationForm)[]
     );
 
     if (result) {

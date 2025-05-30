@@ -1,5 +1,5 @@
 "use client";
-import { setAgreementForm } from "@/Redux/vendor/venderSlice";
+import { setAgreementForm } from "@/Redux/vendor/vendorSlice";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";

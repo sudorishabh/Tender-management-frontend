@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./auth/authSlice";
 import { api } from "./api";
-import venderSlice from "./vendor/venderSlice";
+import { vendorSlice } from "./vendor/vendorSlice";
 import tenderSlice from "./tender/tenderSlice";
 import categorySlice from "./category/categorySlice";
 import { informApi } from "./inform/informApi";
@@ -11,7 +11,7 @@ export const store = configureStore({
     [api.reducerPath]: api.reducer,
     [informApi.reducerPath]: informApi.reducer,
     authSlice: authSlice.reducer,
-    venderSlice: venderSlice.reducer,
+    vendorSlice: vendorSlice.reducer,
     tenderSlice: tenderSlice.reducer,
     categorySlice: categorySlice.reducer,
   },

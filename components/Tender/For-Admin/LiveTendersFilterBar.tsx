@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Input } from "@/components/ui/input";
-import { RotateCcw, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -102,12 +102,11 @@ const LiveTendersFilterBar: FC = () => {
             </SelectContent>
           </Select>
         </div>
-
         <Button
-          variant={"outline"}
-          className=' text-red-600 rounded-mmd'
+          variant='outline'
+          className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
           onClick={handleResetNav}>
-          <RotateCcw /> Reset
+          Reset
         </Button>
       </div>
     </div>

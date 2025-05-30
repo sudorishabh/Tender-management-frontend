@@ -1,4 +1,4 @@
-export interface IVenderRegistrationForm {
+export interface IVendorRegistrationForm {
   email: string;
   password: string;
   fullname: string;
@@ -25,7 +25,7 @@ export interface IVenderRegistrationForm {
   msmeCertificateDoc: File | null;
 }
 
-export interface IVendersTable {
+export interface IVendorsTable {
   businessClassification: string;
   status: string;
   fullname: string;

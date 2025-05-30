@@ -31,8 +31,8 @@ interface CategoryVendorResponse {
 const vendorApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getVendors: builder.query({
-      query: ({ page = 1, limit = 10, status, category }) => ({
-        url: `/vendor/all?page=${page}&limit=${limit}&status=${status}&category=${category}`,
+      query: ({ page = 1, limit = 10, status, search }) => ({
+        url: `/vendor/all?page=${page}&limit=${limit}&status=${status}&search=${search}`,
         method: "GET",
       }),
       serializeQueryArgs: ({ endpointName }: { endpointName: string }) => {
@@ -167,6 +167,14 @@ const vendorApi = api.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    updateVendorStatus: builder.mutation({
+      query: (data) => ({
+        url: "/vendor/update-status",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -181,4 +189,5 @@ export const {
   useGetVendorQualifiedTendersQuery,
   useGetVendorParticipatedTendersQuery,
   useGetVendorBidsQuery,
+  useUpdateVendorStatusMutation,
 } = vendorApi;

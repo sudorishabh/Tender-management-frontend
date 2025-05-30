@@ -1,42 +1,28 @@
-"use client";
 import GeneralWrapper from "@/components/Shared/GeneralWrapper";
-import Home from "../components/Home/Home";
-import { useGetCategoriesNamesQuery } from "@/Redux/category/categoryApi";
-import { setCategories } from "@/Redux/category/categorySlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "@/Redux/store";
-import React, { useEffect } from "react";
+import HomeSidebar from "@/components/Home/HomeSidebar";
+import HomeBanner from "@/components/Home/HomeBanner";
+import HomeTendersActionBar from "@/components/Home/HomeTendersActionBar";
+import HomeTenderTabs from "@/components/Home/HomeTenderTabs";
+import HomeActiveFilter from "@/components/Home/HomeActiveFilter";
+import HomeTenderLists from "@/components/Home/HomeTenderLists";
 
-const HomePage = () => {
-  const dispatch = useDispatch();
-  const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useGetCategoriesNamesQuery({});
-
-  const { isLoggedIn, isRefreshing: isLoading } = useSelector(
-    (state: RootState) => state.authSlice
-  );
-  const { activeTenderTab } = useSelector(
-    (state: RootState) => state.tenderSlice
-  );
-
-  useEffect(() => {
-    if (categoriesData) {
-      dispatch(setCategories(categoriesData));
-    }
-  }, [categoriesData, dispatch]);
-
+const Home = () => {
   return (
     <GeneralWrapper>
-      <Home
-        categoriesData={categoriesData?.categories}
-        isCategoriesLoading={isCategoriesLoading}
-        isLoggedIn={isLoggedIn}
-        isLoading={isLoading}
-        activeTenderTab={activeTenderTab}
-      />
+      <div className='mx-auto px-4 max-w-7xl'>
+        <div className='flex flex-row gap-8'>
+          <div className='flex flex-1 flex-col'>
+            <HomeBanner />
+            <HomeTendersActionBar />
+            <HomeActiveFilter />
+            <HomeTenderTabs />
+            <HomeTenderLists />
+          </div>
+          <HomeSidebar />
+        </div>
+      </div>
     </GeneralWrapper>
   );
 };
 
-export default HomePage;
+export default Home;

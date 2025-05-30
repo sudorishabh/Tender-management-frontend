@@ -35,7 +35,7 @@ interface Props {
   isSavingTender: boolean;
 }
 
-const VenderDocRequirement: FC<Props> = ({
+const VendorDocRequirement: FC<Props> = ({
   setActive,
   handleSaveTender,
   isSavingTender,
@@ -49,7 +49,7 @@ const VenderDocRequirement: FC<Props> = ({
   } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "venderDocRequirement",
+    name: "vendorDocRequirement",
   });
 
   // Helper function to safely get error messages
@@ -71,7 +71,7 @@ const VenderDocRequirement: FC<Props> = ({
   };
 
   function addDocumentDefinition() {
-    const documents = watch("venderDocRequirement");
+    const documents = watch("vendorDocRequirement");
     const lastDocument = documents[documents.length - 1];
 
     if (
@@ -142,9 +142,9 @@ const VenderDocRequirement: FC<Props> = ({
                     className='text-primary'
                   />
                   Required Document {i + 1}
-                  {watch(`venderDocRequirement.${i}.name`) && (
+                  {watch(`vendorDocRequirement.${i}.name`) && (
                     <span className='ml-2 text-gray-600 text-sm'>
-                      - {watch(`venderDocRequirement.${i}.name`)}
+                      - {watch(`vendorDocRequirement.${i}.name`)}
                     </span>
                   )}
                 </h2>
@@ -170,21 +170,21 @@ const VenderDocRequirement: FC<Props> = ({
                     <div className='space-y-2'>
                       <label
                         className={`${formLabelStyle} flex items-center gap-1`}
-                        htmlFor={`venderDocRequirement.${i}.name`}>
+                        htmlFor={`vendorDocRequirement.${i}.name`}>
                         Document Name
                         <span className='text-red-500'>*</span>
                       </label>
                       <Input
-                        id={`venderDocRequirement.${i}.name`}
+                        id={`vendorDocRequirement.${i}.name`}
                         className={inputStyle}
                         placeholder='E.g., Financial Statements, Company Profile'
-                        {...register(`venderDocRequirement.${i}.name`, {
+                        {...register(`vendorDocRequirement.${i}.name`, {
                           required: "Document name is required",
                         })}
                       />
-                      {getErrorMessage(`venderDocRequirement.${i}.name`) && (
+                      {getErrorMessage(`vendorDocRequirement.${i}.name`) && (
                         <p className='text-red-500 text-xs mt-1'>
-                          {getErrorMessage(`venderDocRequirement.${i}.name`)}
+                          {getErrorMessage(`vendorDocRequirement.${i}.name`)}
                         </p>
                       )}
                     </div>
@@ -192,19 +192,19 @@ const VenderDocRequirement: FC<Props> = ({
                     <div className='space-y-2'>
                       <label
                         className={`${formLabelStyle} flex items-center gap-1`}
-                        htmlFor={`venderDocRequirement.${i}.type`}>
+                        htmlFor={`vendorDocRequirement.${i}.type`}>
                         Document Format
                         <span className='text-red-500'>*</span>
                       </label>
                       <Select
-                        value={watch(`venderDocRequirement.${i}.type`) || ""}
+                        value={watch(`vendorDocRequirement.${i}.type`) || ""}
                         onValueChange={(value) => {
-                          setValue(`venderDocRequirement.${i}.type`, value, {
+                          setValue(`vendorDocRequirement.${i}.type`, value, {
                             shouldValidate: true,
                           });
                         }}>
                         <SelectTrigger
-                          id={`venderDocRequirement.${i}.type`}
+                          id={`vendorDocRequirement.${i}.type`}
                           className={inputStyle}>
                           <SelectValue placeholder='Select required format' />
                         </SelectTrigger>
@@ -218,9 +218,9 @@ const VenderDocRequirement: FC<Props> = ({
                           <SelectItem value='other'>Other Format</SelectItem> */}
                         </SelectContent>
                       </Select>
-                      {getErrorMessage(`venderDocRequirement.${i}.type`) && (
+                      {getErrorMessage(`vendorDocRequirement.${i}.type`) && (
                         <p className='text-red-500 text-xs mt-1'>
-                          {getErrorMessage(`venderDocRequirement.${i}.type`)}
+                          {getErrorMessage(`vendorDocRequirement.${i}.type`)}
                         </p>
                       )}
                       <p className='text-xs text-gray-500'>
@@ -232,22 +232,22 @@ const VenderDocRequirement: FC<Props> = ({
                   <div className='space-y-2'>
                     <label
                       className={`${formLabelStyle} flex items-center gap-1`}
-                      htmlFor={`venderDocRequirement.${i}.purpose`}>
+                      htmlFor={`vendorDocRequirement.${i}.purpose`}>
                       Purpose & Requirements
                       <span className='text-red-500'>*</span>
                     </label>
                     <Textarea
-                      id={`venderDocRequirement.${i}.purpose`}
+                      id={`vendorDocRequirement.${i}.purpose`}
                       rows={5}
                       className={inputStyle}
                       placeholder='Explain why this document is required and any specific details that should be included'
-                      {...register(`venderDocRequirement.${i}.purpose`, {
+                      {...register(`vendorDocRequirement.${i}.purpose`, {
                         required: "Document purpose is required",
                       })}
                     />
-                    {getErrorMessage(`venderDocRequirement.${i}.purpose`) && (
+                    {getErrorMessage(`vendorDocRequirement.${i}.purpose`) && (
                       <p className='text-red-500 text-xs mt-1'>
-                        {getErrorMessage(`venderDocRequirement.${i}.purpose`)}
+                        {getErrorMessage(`vendorDocRequirement.${i}.purpose`)}
                       </p>
                     )}
                     <p className='text-xs text-gray-500 mt-1'>
@@ -280,4 +280,4 @@ const VenderDocRequirement: FC<Props> = ({
   );
 };
 
-export default VenderDocRequirement;
+export default VendorDocRequirement;

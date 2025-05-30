@@ -14,7 +14,7 @@ interface BusinessInfoForm {
   country: string;
 }
 
-interface VenderInfoForm {
+interface VendorInfoForm {
   email: string;
   password: string;
   fullname: string;
@@ -28,19 +28,19 @@ interface DocumentsInfoForm {
   panCardS3DocName: string;
 }
 
-interface VenderRegistrationState {
+interface VendorRegistrationState {
   isTermServiceChecked: boolean;
   isAcceptPrivacyChecked: boolean;
   isBusinessEthicsChecked: boolean;
   businessInfoForm: BusinessInfoForm;
-  venderInfoForm: VenderInfoForm;
+  vendorInfoForm: VendorInfoForm;
   documentsInfoForm: DocumentsInfoForm;
   vendorDetailsActive: number;
   manageVendorStatus: string;
-  manageVendorCategory: string;
+  manageVendorSearch: string;
 }
 
-const initialData: VenderRegistrationState = {
+const initialData: VendorRegistrationState = {
   isTermServiceChecked: false,
   isAcceptPrivacyChecked: false,
   isBusinessEthicsChecked: false,
@@ -56,7 +56,7 @@ const initialData: VenderRegistrationState = {
     pinCode: "",
     country: "",
   },
-  venderInfoForm: {
+  vendorInfoForm: {
     fullname: "",
     email: "",
     contactNumber: "",
@@ -70,11 +70,11 @@ const initialData: VenderRegistrationState = {
   },
   vendorDetailsActive: 0,
   manageVendorStatus: "all",
-  manageVendorCategory: "all",
+  manageVendorSearch: "",
 };
 
 // Validation functions
-export const isAgreementValid = (state: VenderRegistrationState): boolean => {
+export const isAgreementValid = (state: VendorRegistrationState): boolean => {
   return (
     state.isTermServiceChecked &&
     state.isAcceptPrivacyChecked &&
@@ -93,21 +93,21 @@ export const isBusinessFormValid = (
   return requiredFields.every((value) => value !== "");
 };
 
-export const isVendorFormValid = (vendorForm: VenderInfoForm): boolean => {
+export const isVendorFormValid = (vendorForm: VendorInfoForm): boolean => {
   const requiredFields = Object.values(vendorForm).map((value) => value.trim());
   return requiredFields.every((value) => value !== "");
 };
 
-export const isFormValid = (state: VenderRegistrationState): boolean => {
+export const isFormValid = (state: VendorRegistrationState): boolean => {
   return (
     isAgreementValid(state) &&
     isBusinessFormValid(state.businessInfoForm) &&
-    isVendorFormValid(state.venderInfoForm)
+    isVendorFormValid(state.vendorInfoForm)
   );
 };
 
-export const venderSlice = createSlice({
-  name: "venderRegistrationSlice",
+export const vendorSlice = createSlice({
+  name: "vendorRegistrationSlice",
   initialState: initialData,
   reducers: {
     setAgreementForm: (state, { payload }) => {
@@ -119,8 +119,8 @@ export const venderSlice = createSlice({
     setBusinessForm: (state, { payload }) => {
       state.businessInfoForm = payload;
     },
-    setVenderForm: (state, { payload }) => {
-      state.venderInfoForm = payload;
+    setVendorForm: (state, { payload }) => {
+      state.vendorInfoForm = payload;
     },
     setDocumentsForm: (state, { payload }) => {
       state.documentsInfoForm = payload;
@@ -131,8 +131,8 @@ export const venderSlice = createSlice({
     setManageVendorStatus: (state, { payload }) => {
       state.manageVendorStatus = payload;
     },
-    setManageVendorCategory: (state, { payload }) => {
-      state.manageVendorCategory = payload;
+    setManageVendorSearch: (state, { payload }) => {
+      state.manageVendorSearch = payload;
     },
   },
 });
@@ -140,11 +140,11 @@ export const venderSlice = createSlice({
 export const {
   setAgreementForm,
   setBusinessForm,
-  setVenderForm,
+  setVendorForm,
   setDocumentsForm,
   setActiveVendorDetails,
   setManageVendorStatus,
-  setManageVendorCategory,
-} = venderSlice.actions;
+  setManageVendorSearch,
+} = vendorSlice.actions;
 
-export default venderSlice;
+export default vendorSlice;

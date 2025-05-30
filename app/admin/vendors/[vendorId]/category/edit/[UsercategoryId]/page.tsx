@@ -1,4 +1,4 @@
-import AddEditVendorCategory from "@/components/Vendor/For-Admin/AddEditVenderCategory";
+import AddEditVendorCategory from "@/components/Vendor/For-Admin/AddEditVendorCategory";
 import React, { use } from "react";
 import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
 

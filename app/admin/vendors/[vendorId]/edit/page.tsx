@@ -4,7 +4,7 @@ import { use } from "react";
 import AdminPagesWrapper from "@/components/Admin/AdminPagesWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
-import { setActiveVendorDetails } from "@/Redux/vendor/venderSlice";
+import { setActiveVendorDetails } from "@/Redux/vendor/vendorSlice";
 import { useGetVendorDetailsQuery } from "@/Redux/vendor/vendorApi";
 import { LoaderCircle } from "lucide-react";
 
@@ -13,7 +13,7 @@ const Vendor = ({ params }: { params: Promise<{ vendorId: string }> }) => {
   const { vendorId } = resolvedParams;
 
   const { vendorDetailsActive } = useSelector(
-    (state: RootState) => state.venderSlice
+    (state: RootState) => state.vendorSlice
   );
   const { data, isLoading, isError } = useGetVendorDetailsQuery(vendorId);
 

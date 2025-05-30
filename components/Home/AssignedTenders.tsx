@@ -13,29 +13,44 @@ const AssignedTenders = () => {
   const pageRef = useRef(1);
 
   const {
-    user: { id },
+    user: { id, role },
   } = useSelector((state: RootState) => state.authSlice);
 
-  const { data, isLoading, isFetching, refetch } = useGetAssignedTendersQuery({
-    id: id,
-    page: pageRef.current,
-    limit: 5,
-  });
+  const { data, isLoading, isFetching, refetch } = useGetAssignedTendersQuery(
+    {
+      id: id,
+      page: pageRef.current,
+      limit: 5,
+    },
+    {
+      skip: role !== "vendor",
+    }
+  );
 
   const hasTenders = data?.tenders && data.tenders.length > 0;
+  if (isLoading) return <TenderCardSkeleton />;
 
   return (
     <div>
-      {isLoading && <TenderCardSkeleton />}
+      {role === "admin" && (
+        <div className='flex flex-col mt-20 items-center justify-center'>
+          <h1 className='text-2xl font-semibold'>
+            You are not authorized to view this page
+          </h1>
+          <p className='text-gray-500'>
+            Only vendors can view their assigned tenders
+          </p>
+        </div>
+      )}
 
-      {!isLoading && !hasTenders && (
+      {!isLoading && !hasTenders && role === "vendor" && (
         <div className='flex flex-col mt-20 items-center justify-center'>
           <h1 className='text-2xl font-semibold'>No tenders found</h1>
           <p className='text-gray-500'>No admin-assigned tenders available</p>
         </div>
       )}
 
-      {!isLoading && hasTenders && (
+      {!isLoading && hasTenders && role === "vendor" && (
         <InfiniteScroll
           hasMore={data?.hasMore}
           isFetching={isFetching}

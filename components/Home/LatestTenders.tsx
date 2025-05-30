@@ -12,7 +12,7 @@ import { RootState } from "@/Redux/store";
 const LatestTenders = () => {
   const pageRef = useRef(1);
   const {
-    tenderHomeFilter: { budgetRange, category, publishDate, status, sortBy },
+    tenderHomeFilter: { budgetRange, category, publishDate, sortBy },
   } = useSelector((state: RootState) => state.tenderSlice);
 
   const { data, isLoading, isFetching, refetch } = useGetLiveTendersQuery({
@@ -21,13 +21,12 @@ const LatestTenders = () => {
     budgetRange,
     category,
     publishDate,
-    status,
     sortBy,
   });
 
   useEffect(() => {
     refetch();
-  }, [budgetRange, category, publishDate, status, sortBy, refetch]);
+  }, [budgetRange, category, publishDate, sortBy, refetch]);
 
   const hasTenders = data?.tenders && data.tenders.length > 0;
 

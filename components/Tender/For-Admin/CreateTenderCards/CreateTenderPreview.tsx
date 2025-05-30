@@ -4,7 +4,7 @@ import {
   ITenderFeeDetails,
   ITenderPreQualification,
   ITenderSupportDocument,
-  IVenderDocRequirement,
+  IVendorDocRequirement,
 } from "@/Types/Tender-Types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,7 +50,7 @@ interface Props {
     keyDates: IKeyDate;
     tenderFeeDetails: ITenderFeeDetails;
     tenderSupportDocuments: ITenderSupportDocument[];
-    venderDocRequirement: IVenderDocRequirement[];
+    vendorDocRequirement: IVendorDocRequirement[];
     tenderPreQualifications: ITenderPreQualification[];
   };
   isLoading: boolean;
@@ -77,7 +77,7 @@ type ValueType =
   | null
   | undefined
   | ITenderSupportDocument
-  | IVenderDocRequirement
+  | IVendorDocRequirement
   | ITenderPreQualification;
 
 const CreateTenderPreview: FC<Props> = ({
@@ -316,7 +316,7 @@ const CreateTenderPreview: FC<Props> = ({
     });
 
     // Check vendor requirements
-    isPreviewData?.venderDocRequirement?.forEach((req) => {
+    isPreviewData?.vendorDocRequirement?.forEach((req) => {
       Object.values(req).forEach((value) => {
         if (isValueMissing(value)) count++;
       });
@@ -638,10 +638,10 @@ const CreateTenderPreview: FC<Props> = ({
                     </h3>
                   </div>
                   <div className='p-4'>
-                    {isPreviewData?.venderDocRequirement &&
-                    isPreviewData.venderDocRequirement.length > 0 ? (
+                    {isPreviewData?.vendorDocRequirement &&
+                    isPreviewData.vendorDocRequirement.length > 0 ? (
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                        {Object.entries(isPreviewData.venderDocRequirement).map(
+                        {Object.entries(isPreviewData.vendorDocRequirement).map(
                           ([key, value]) => {
                             return (
                               <div

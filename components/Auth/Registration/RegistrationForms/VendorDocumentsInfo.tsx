@@ -8,7 +8,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 interface Props {
   handleNextStep: (active: number) => void;
-  handleVenderMutate: () => void;
+  handleVendorMutate: () => void;
   setActive: (active: number) => void;
 }
 
@@ -18,7 +18,7 @@ interface FormValues {
   msmeCertificateDoc: FileList | null;
 }
 
-const VenderDocumentsInfo: FC<Props> = ({ handleVenderMutate, setActive }) => {
+const VendorDocumentsInfo: FC<Props> = ({ handleVendorMutate, setActive }) => {
   const {
     control,
     formState: { errors },
@@ -379,7 +379,7 @@ const VenderDocumentsInfo: FC<Props> = ({ handleVenderMutate, setActive }) => {
         </Button>
 
         <Button
-          onClick={handleVenderMutate}
+          onClick={handleVendorMutate}
           className='bg-primary hover:bg-primary/90 text-white px-6 h-10'>
           Submit Registration
         </Button>
@@ -388,4 +388,4 @@ const VenderDocumentsInfo: FC<Props> = ({ handleVenderMutate, setActive }) => {
   );
 };
 
-export default VenderDocumentsInfo;
+export default VendorDocumentsInfo;

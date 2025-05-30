@@ -9,14 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IVenderCategoryTable } from "@/Types/Category-Types";
+import { IVendorCategoryTable } from "@/Types/Category-Types";
 import { capitalizeFirstLetter } from "@/lib/helper";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import Link from "next/link";
 
 interface Props {
-  data: IVenderCategoryTable[];
+  data: IVendorCategoryTable[];
   id: string;
 }
 
@@ -43,7 +43,7 @@ const VendorCategoriesTable: FC<Props> = ({ data, id: vendorId }) => {
               </TableCell>
             </TableRow>
           ) : (
-            data?.map((category: IVenderCategoryTable) => (
+            data?.map((category: IVendorCategoryTable) => (
               <TableRow key={category.id}>
                 <TableCell className='font-medium'>
                   {capitalizeFirstLetter(category.category)}

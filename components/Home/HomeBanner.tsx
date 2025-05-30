@@ -1,10 +1,17 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import { ChevronRight } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
 
 const HomeBanner = () => {
-  return (
+  const { isLoggedIn, isRefreshing: isLoading } = useSelector(
+    (state: RootState) => state.authSlice
+  );
+
+  return !isLoggedIn && !isLoading ? (
     <div className='relative mb-6 overflow-hidden rounded-xl bg-gradient-to-r from-accent to-accent'>
       <div className='absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-white opacity-10'></div>
       <div className='absolute bottom-0 left-0 h-48 w-48 -translate-x-1/4 translate-y-1/4 rounded-full bg-white opacity-10'></div>
@@ -56,7 +63,7 @@ const HomeBanner = () => {
         </svg>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default HomeBanner;
