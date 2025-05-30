@@ -134,6 +134,10 @@ export const vendorSlice = createSlice({
     setManageVendorSearch: (state, { payload }) => {
       state.manageVendorSearch = payload;
     },
+    resetVendorFilterOptions: (state) => {
+      state.manageVendorStatus = "all";
+      state.manageVendorSearch = "";
+    },
   },
 });
 
@@ -145,6 +149,7 @@ export const {
   setActiveVendorDetails,
   setManageVendorStatus,
   setManageVendorSearch,
+  resetVendorFilterOptions,
 } = vendorSlice.actions;
 
 export default vendorSlice;

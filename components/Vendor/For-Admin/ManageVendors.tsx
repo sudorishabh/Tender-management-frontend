@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "@/Redux/store";
 import {
+  resetVendorFilterOptions,
   setManageVendorSearch,
   setManageVendorStatus,
 } from "@/Redux/vendor/vendorSlice";
@@ -68,7 +69,8 @@ const ManageVendors: FC<Props> = ({ data, isFetching, refetch, pageRef }) => {
 
                 <Button
                   variant='outline'
-                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'>
+                  className='py-1.5 px-3 bg-white border border-gray-300 rounded-mmd text-sm text-gray-700 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary focus:border-primary'
+                  onClick={() => dispatch(resetVendorFilterOptions())}>
                   Reset
                 </Button>
               </div>
