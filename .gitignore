@@ -38,3 +38,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local file uploads
+/uploads/
+
+# build artifacts / local tooling
+build.log
+build-output.txt
+/.VSCodeCounter/
+/.gemini/

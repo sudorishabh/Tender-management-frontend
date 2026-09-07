@@ -1,18 +1,28 @@
 "use client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { LayoutDashboard, LogIn, LogOut } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import SearchResultBox from "./SearchResultBox";
 import HeaderSkeleton from "../Shared/skeleton/HeaderSkeleton";
-import { useState } from "react";
 import CustomButton from "../Shared/CustomButton";
 import useLogout from "@/hooks/useLogout";
 import { getRoleDashboard } from "@/lib/auth/types";
 import type { DbRole } from "@/lib/auth/types";
 
+/**
+ * Dashboard sections render their own sidebar and page chrome, so the global
+ * header is suppressed there rather than stacking two navigations.
+ */
+const DASHBOARD_PREFIXES = ["/admin", "/vendor", "/super"];
+
+const isDashboardRoute = (pathname: string | null) =>
+  !!pathname &&
+  DASHBOARD_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
 
 // Small Logo component to keep Header JSX tidy
 const Logo = () => (
@@ -32,14 +42,16 @@ const Logo = () => (
 );
 
 const Header = () => {
-  const [isMobileSearchExpanded, setIsMobileSearchExpanded] = useState(false);
   const { data: session, status } = useSession();
   const { logout, isLoggingOut } = useLogout();
+  const pathname = usePathname();
 
   const user = session?.user as any;
   const role = user?.role;
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
+
+  if (isDashboardRoute(pathname)) return null;
 
   return (
     <header
@@ -51,77 +63,70 @@ const Header = () => {
       <nav
         className='flex justify-between items-center w-full'
         aria-label='Primary navigation'>
-        <div className='flex items-center gap-2.5 md:gap-10'>
-          <Link
-            href='/'
-            className='flex items-center gap-2'>
-            <Logo />
-          </Link>
+        <Link
+          href='/'
+          className='flex items-center gap-2'>
+          <Logo />
+        </Link>
 
-          <SearchResultBox
-            isMobileSearchExpanded={isMobileSearchExpanded}
-            setIsMobileSearchExpanded={setIsMobileSearchExpanded}
-          />
-        </div>
-        {!isMobileSearchExpanded && (
-          <div className='flex items-center gap-2 md:gap-4 font-medium text-text-secondary-color'>
-            {!isLoading ? (
-              <>
-                {isAuthenticated ? (
-                  <Link href={getRoleDashboard(role as DbRole)}>
-                    <Button
-                      className={cn(
-                        "h-8 md:h-8 flex items-center gap-1 text-primary shadow-none rounded-md bg-white",
-                        "border-gray-200 hover:bg-gray-100 hover:border-gray-100 ",
-                        "transition-all duration-300 text-xs md:text-xs px-0 md:px-2"
-                      )}>
-                      <LayoutDashboard className='!size-3.5' />
-                      {role === "vendor"
-                        ? "Dashboard"
-                        : role === "admin"
-                        ? "Admin Dashboard"
-                        : role === "super_admin"
-                        ? "S. Admin Dashboard"
-                        : "Vendor Board"}
-                    </Button>
+        <div className='flex items-center gap-2 md:gap-4 font-medium text-text-secondary-color'>
+          {!isLoading ? (
+            <>
+              {isAuthenticated ? (
+                <Link href={getRoleDashboard(role as DbRole)}>
+                  <Button
+                    className={cn(
+                      "h-8 md:h-8 flex items-center gap-1 text-primary shadow-none rounded-md bg-white",
+                      "border-gray-200 hover:bg-gray-100 hover:border-gray-100 ",
+                      "transition-all duration-300 text-xs md:text-xs px-0 md:px-2"
+                    )}>
+                    <LayoutDashboard className='!size-3.5' />
+                    {role === "vendor"
+                      ? "Dashboard"
+                      : role === "admin"
+                      ? "Admin Dashboard"
+                      : role === "super_admin"
+                      ? "S. Admin Dashboard"
+                      : "Vendor Board"}
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href={"/sign-in"}>
+                    <CustomButton
+                      variant='tertiary'
+                      btnName='Sign In'
+                    />
                   </Link>
-                ) : (
-                  <>
-                    <Link href={"/sign-in"}>
-                      <CustomButton
-                        variant='tertiary'
-                        btnName='Sign In'
-                      />
-                    </Link>
-                    <Link href={"/register"}>
-                      <CustomButton
-                        variant='primary'
-                        btnName='Register Now'
-                      />
-                    </Link>
-                  </>
-                )}
-              </>
-            ) : (
-              <HeaderSkeleton />
-            )}
-            {isAuthenticated && (
-              <button
-                className='bg-gray-100/70 hover:bg-red-50 p-2 rounded-lg transition duration-300 ease-in-out group'
-                onClick={logout}
-                disabled={isLoggingOut}>
-                {isLoggingOut ? (
-                  <div className='w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin'></div>
-                ) : (
-                  <LogOut
-                    size={16}
-                    className='group-hover:text-red-600 text-gray-500'
-                  />
-                )}
-              </button>
-            )}
-          </div>
-        )}
+                  <Link href={"/register"}>
+                    <CustomButton
+                      variant='primary'
+                      btnName='Register Now'
+                    />
+                  </Link>
+                </>
+              )}
+            </>
+          ) : (
+            <HeaderSkeleton />
+          )}
+          {isAuthenticated && (
+            <button
+              className='bg-gray-100/70 hover:bg-red-50 p-2 rounded-lg transition duration-300 ease-in-out group'
+              onClick={logout}
+              disabled={isLoggingOut}
+              aria-label='Sign out'>
+              {isLoggingOut ? (
+                <div className='w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin'></div>
+              ) : (
+                <LogOut
+                  size={16}
+                  className='group-hover:text-red-600 text-gray-500'
+                />
+              )}
+            </button>
+          )}
+        </div>
       </nav>
     </header>
   );

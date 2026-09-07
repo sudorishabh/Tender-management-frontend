@@ -32,7 +32,7 @@ const eslintConfig = [
       "**/tsconfig.tsbuildinfo",
       "**/.next/**",
       "**/node_modules/**",
-      "**/components/Admin/AdminDashboard.tsx",
+      "**/_components/Admin/AdminDashboard.tsx",
     ],
   },
 ];

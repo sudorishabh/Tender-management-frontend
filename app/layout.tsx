@@ -1,26 +1,27 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import RootProvider from "../components/RootProvider";
-import Header from "../components/Header/Header";
-import PersistLogin from "@/components/Auth/PersistLogin";
-import { Toaster } from "@/components/ui/sonner";
+import RootProvider from "../_components/RootProvider";
+import Header from "../_components/Header/Header";
+import { Toaster } from "@/_components/ui/sonner";
+// AuthProvider and TRPCProvider are wrapped in RootProvider
+// import AuthProvider from "@/_components/AuthProvider";
+// import { TRPCProvider } from "@/lib/trpc";
+import { defaultMetadata, defaultViewport } from "@/lib/seo.config";
+import { JsonLdScript } from "@/_components/SEO/JsonLd";
+import { homePageSchemas } from "@/lib/structured-data";
 
 const robotoMono = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap", // Improve font loading performance for better Core Web Vitals
 });
 
-export const metadata: Metadata = {
-  title: "TERI Tenders",
-  description:
-    "TERI Tenders is a comprehensive platform enabling vendors to discover, bid, and manage tenders efficiently.",
-  keywords:
-    "TERI Tenders, Vendor Bidding, Tender Management, Procurement Platform, Bid Management System",
-  icons: {
-    icon: "/TERI_LOGO.png",
-  },
-};
+// Export comprehensive metadata for SEO
+export const metadata: Metadata = defaultMetadata;
+
+// Export viewport configuration
+export const viewport: Viewport = defaultViewport;
 
 export default function RootLayout({
   children,
@@ -28,22 +29,52 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html
+      lang='en'
+      dir='ltr'>
+      <head>
+        {/* Structured Data for SEO */}
+        <JsonLdScript data={homePageSchemas} />
+        {/* Preconnect to important origins */}
+        <link
+          rel='preconnect'
+          href='https://fonts.googleapis.com'
+        />
+        <link
+          rel='preconnect'
+          href='https://fonts.gstatic.com'
+          crossOrigin='anonymous'
+        />
+        {/* DNS Prefetch for external resources */}
+        <link
+          rel='dns-prefetch'
+          href='//www.google-analytics.com'
+        />
+      </head>
       <body
+        suppressHydrationWarning
         className={`${robotoMono.className} antialiased bg-white min-h-svh`}>
+        {/* Skip link for keyboard accessibility */}
+        {/* <a
+          href='#main-content'
+          className='skip-link sr-only-focusable'>
+          Skip to main content
+        </a> */}
+        {/* <TRPCProvider> */}
         <RootProvider>
-          <PersistLogin>
-            <Header />
-            <main>{children}</main>
-            <Toaster
-              richColors
-              theme='light'
-              className='custom-toaster '
-              position='top-center'
-              closeButton={true}
-            />
-          </PersistLogin>
+          {/* <AuthProvider> */}
+          <Header />
+          <div id='main-content'>{children}</div>
+          <Toaster
+            richColors
+            theme='light'
+            className='custom-toaster'
+            position='bottom-right'
+            closeButton={true}
+          />
+          {/* </AuthProvider> */}
         </RootProvider>
+        {/* </TRPCProvider> */}
       </body>
     </html>
   );

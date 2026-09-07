@@ -1,0 +1,1 @@
+ALTER TABLE `bids` ADD `bid_fee_doc_key` varchar(255);

@@ -1,95 +1,49 @@
-"use client";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/Redux/store";
-import { setAgreementForm } from "@/Redux/vendor/vendorSlice";
-import { useRouter } from "next/navigation";
+import Registration from "@/app/(auth)/register/_components/Registration";
+import { Suspense } from "react";
+import { ShieldCheck, Clock } from "lucide-react";
 
-import Agreement from "@/components/Auth/Registration/Agreement";
-
-const Registration = () => {
-  const [isAgreementFormErr, setIsAgreementFormErr] = useState({
-    termErr: false,
-    accPrivacyErr: false,
-    businessEthicsErr: false,
-  });
-
-  const {
-    isAcceptPrivacyChecked,
-    isBusinessEthicsChecked,
-    isTermServiceChecked,
-  } = useSelector((state: RootState) => state.vendorSlice);
-
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  function handleAgreementForm() {
-    if (!isTermServiceChecked) {
-      setIsAgreementFormErr((prev) => ({ ...prev, termErr: true }));
-    } else {
-      setIsAgreementFormErr((prev) => ({ ...prev, termErr: false }));
-    }
-    if (!isAcceptPrivacyChecked) {
-      setIsAgreementFormErr((prev) => ({ ...prev, accPrivacyErr: true }));
-    } else {
-      setIsAgreementFormErr((prev) => ({ ...prev, accPrivacyErr: false }));
-    }
-    if (!isBusinessEthicsChecked) {
-      setIsAgreementFormErr((prev) => ({ ...prev, businessEthicsErr: true }));
-    } else {
-      setIsAgreementFormErr((prev) => ({ ...prev, businessEthicsErr: false }));
-    }
-
-    if (
-      isTermServiceChecked &&
-      isAcceptPrivacyChecked &&
-      isBusinessEthicsChecked
-    )
-      router.push("/register/vendor");
-  }
-
-  const setIsTermServiceChecked = (val: boolean) => {
-    dispatch(
-      setAgreementForm({
-        isAcceptPrivacyChecked,
-        isBusinessEthicsChecked,
-        isTermServiceChecked: val,
-      })
-    );
-  };
-  const setIsAcceptPrivacyChecked = (val: boolean) => {
-    dispatch(
-      setAgreementForm({
-        isAcceptPrivacyChecked: val,
-        isBusinessEthicsChecked,
-        isTermServiceChecked,
-      })
-    );
-  };
-  const setIsBusinessEthicsChecked = (val: boolean) => {
-    dispatch(
-      setAgreementForm({
-        isAcceptPrivacyChecked,
-        isBusinessEthicsChecked: val,
-        isTermServiceChecked,
-      })
-    );
-  };
-
+const VendorRegistration = () => {
   return (
     <div className='min-h-screen bg-gray-50'>
-      <Agreement
-        handleAgreementForm={handleAgreementForm}
-        isAgreementFormErr={isAgreementFormErr}
-        isTermServiceChecked={isTermServiceChecked}
-        setIsTermServiceChecked={setIsTermServiceChecked}
-        isAcceptPrivacyChecked={isAcceptPrivacyChecked}
-        setIsAcceptPrivacyChecked={setIsAcceptPrivacyChecked}
-        isBusinessEthicsChecked={isBusinessEthicsChecked}
-        setIsBusinessEthicsChecked={setIsBusinessEthicsChecked}
-      />
+      {/* Hero Header Section */}
+      <div className='mx-auto px-6 lg:px-12 py-7 lg:py-8 flex items-center justify-center'>
+        <div className='max-w-4xl flex items-center justify-center flex-col'>
+          <h1 className='text-sky-700 text-xl lg:text-2xl font-semibold text-foreground mb-3 tracking-tight'>
+            Vendor Registration
+          </h1>
+          <p className='text-sm text-gray-500 max-w-2xl leading-relaxed'>
+            Please provide all necessary details to register your company as a
+            vendor.
+          </p>
+          <p className='text-sm text-gray-500 max-w-2xl leading-relaxed'>
+            Our step-by-step form will help you complete the registration
+            quickly and easily.
+          </p>
+
+          {/* Feature badges */}
+          <div className='flex text-gray-500 flex-wrap gap-4 mt-4'>
+            <div
+              className='flex items-center gap-2
+              border border-primary/30 rounded-full px-3 py-1.5 text-sm text-muted-foreground bg-primary/10'>
+              <ShieldCheck size={12} />
+              <span className='text-xs'>Secure & Encrypted</span>
+            </div>
+            <div className='flex items-center gap-2 rounded-full px-3 py-1.5 border border-primary/30 text-sm text-muted-foreground bg-primary/10'>
+              <Clock size={12} />
+              <span className='text-xs'>~10 min to complete</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className=' lg:pb-12'>
+        <Suspense>
+          <Registration />
+        </Suspense>
+      </div>
     </div>
   );
 };
 
-export default Registration;
+export default VendorRegistration;

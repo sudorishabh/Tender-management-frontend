@@ -1,0 +1,27 @@
+{
+  "name": "TERI Tenders",
+  "short_name": "TERI Tenders",
+  "description": "TERI's eTender Management System - Discover, bid, and manage tenders efficiently",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a365d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/TERI_LOGO.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/TERI_LOGO.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "government"],
+  "lang": "en-IN",
+  "dir": "ltr"
+}

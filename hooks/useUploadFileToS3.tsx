@@ -1,46 +1,50 @@
-import { generateUniqueId, getPdfFileQuery } from "@/lib/helper";
-import { useGetUploadUrlMutation } from "@/Redux/s3-files/s3-files-Api";
-import axios from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const useUploadFileToS3 = (): [
-  (fileInput: File | FileList, type: string) => Promise<string>,
-  { isLoading: boolean }
+  (fileInput: FileList | File, type: string, folder?: string) => Promise<string>,
+  { isLoading: boolean },
 ] => {
-  const [getUploadUrl] = useGetUploadUrlMutation();
-  const [isLoading, setIsLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const uploadFile = async (
-    fileInput: File | FileList,
-    type: string
+    fileInput: FileList | File,
+    type: string,
+    folder: string = "pdf"
   ): Promise<string> => {
     try {
-      setIsLoading(true);
+      setUploading(true);
       const file = fileInput instanceof FileList ? fileInput[0] : fileInput;
-      const uniqueFileName = generateUniqueId(file?.name);
-      const { fileName, fileType } = getPdfFileQuery(uniqueFileName);
 
-      const response = await getUploadUrl({
-        fileName,
-        contentType: fileType,
-      }).unwrap();
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", folder);
 
-      if (!response?.success || !response?.uploadUrl) {
-        throw new Error(`Failed to get upload URL for ${type} document`);
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to upload ${type} document`);
       }
 
-      await axios.put(response.uploadUrl, file);
-      return uniqueFileName;
+      const data = await response.json();
+
+      if (!data.success || !data.key) {
+        throw new Error(`Failed to upload ${type} document`);
+      }
+
+      return data.key;
     } catch (error) {
       toast.error(`Failed to upload ${type} document`);
       throw error;
     } finally {
-      setIsLoading(false);
+      setUploading(false);
     }
   };
 
-  return [uploadFile, { isLoading }];
+  return [uploadFile, { isLoading: uploading }];
 };
 
 export default useUploadFileToS3;

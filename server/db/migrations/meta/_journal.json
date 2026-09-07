@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1765878702578,
+      "tag": "0000_flippant_lilith",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1765879511022,
+      "tag": "0001_elite_random",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766222059730,
+      "tag": "0002_milky_robin_chapel",
+      "breakpoints": true
+    }
+  ]
+}

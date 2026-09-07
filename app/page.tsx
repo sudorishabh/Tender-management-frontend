@@ -1,25 +1,34 @@
-import GeneralWrapper from "@/components/Shared/GeneralWrapper";
-import HomeSidebar from "@/components/Home/HomeSidebar";
-import HomeBanner from "@/components/Home/HomeBanner";
-import HomeTendersActionBar from "@/components/Home/HomeTendersActionBar";
-import HomeTenderTabs from "@/components/Home/HomeTenderTabs";
-import HomeActiveFilter from "@/components/Home/HomeActiveFilter";
-import HomeTenderLists from "@/components/Home/HomeTenderLists";
+import GeneralWrapper from "@/_components/Shared/GeneralWrapper";
+import HomeSidebar from "@/app/_components/HomeRightSection";
+import HomeBanner from "@/app/_components/HomeBanner";
+import HomeTendersActionBar from "@/app/_components/HomeTenderActionBar/HomeTendersActionBar";
+import HomeTenders from "./_components/HomeTenders";
 
 const Home = () => {
   return (
     <GeneralWrapper>
-      <div className='mx-auto px-4 max-w-7xl'>
-        <div className='flex flex-row gap-8'>
-          <div className='flex flex-1 flex-col'>
+      {/* pt clears the fixed header, which is h-12 on mobile / h-14 from md */}
+      <div className='flex flex-col lg:flex-row gap-0 lg:gap-3 xl:gap-8 pt-12 md:pt-14'>
+        {/* Main Content Area */}
+        <main
+          className='flex flex-1 flex-col min-w-0'
+          role='main'>
+          <section aria-label='Welcome banner'>
             <HomeBanner />
-            <HomeTendersActionBar />
-            <HomeActiveFilter />
-            <HomeTenderTabs />
-            <HomeTenderLists />
-          </div>
+          </section>
+          <HomeTendersActionBar />
+          <section aria-label='Tender listings'>
+            <h2 className='sr-only'>Available Tenders</h2>
+            <HomeTenders />
+          </section>
+        </main>
+        {/* Sidebar - stacks below the listings on small screens so mobile
+            visitors still get the support contacts and FAQ */}
+        <aside
+          aria-label='Help and support'
+          className='mt-10 shrink-0 lg:mt-0'>
           <HomeSidebar />
-        </div>
+        </aside>
       </div>
     </GeneralWrapper>
   );

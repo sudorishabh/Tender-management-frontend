@@ -1,0 +1,2 @@
+ALTER TABLE `tenders` MODIFY COLUMN `tender_status` enum('draft','review','rescheduled','published') NOT NULL DEFAULT 'draft';--> statement-breakpoint
+ALTER TABLE `vendor_profiles` MODIFY COLUMN `vendor_status` enum('pending','rejected','approved') NOT NULL DEFAULT 'approved';

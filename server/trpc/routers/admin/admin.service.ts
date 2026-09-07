@@ -1,0 +1,215 @@
+import { count, desc, eq, inArray, sum, and, sql } from "drizzle-orm";
+import { db } from "@/server/db";
+import {
+  adminInvitesTable,
+  bidsTable,
+  businessTable,
+  tenderTable,
+  usersTable,
+  vendorProfileTable,
+} from "@/server/db/schema";
+import {
+  ApiError,
+  NotFoundError,
+  InternalServerError,
+} from "@/lib/server/errors";
+import { ROLES } from "@/lib/server/constants";
+import { getCurrentTimeFormatted } from "@/lib/server/tenderStateHelpers";
+
+// MUTATION
+//////////////////////////////////////////////////////////////////
+
+export const deleteAdmin = async (adminId: number) => {
+  try {
+    // Get admin
+    const admin = await db
+      .select({
+        user_id: usersTable.user_id,
+        email: usersTable.email,
+        role: usersTable.role,
+      })
+      .from(usersTable)
+      .where(and(eq(usersTable.user_id, adminId), eq(usersTable.role, "admin")))
+      .limit(1);
+
+    if (admin.length === 0) {
+      throw new NotFoundError(
+        "Admin not found, please try again",
+        "ADMIN_NOT_FOUND"
+      );
+    }
+
+    // Delete admin and related data in transaction
+    await db.transaction(async (tx) => {
+      await tx.delete(usersTable).where(eq(usersTable.user_id, adminId));
+      await tx
+        .delete(adminInvitesTable)
+        .where(eq(adminInvitesTable.invite_email, admin[0].email));
+    });
+
+    return { success: true, message: "Admin deleted successfully" };
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new InternalServerError(
+      "Failed to delete admin",
+      "DELETE_ADMIN_ERROR"
+    );
+  }
+};
+
+// QUERY
+//////////////////////////////////////////////////////////////////
+
+export const getAllAdmins = async () => {
+  try {
+    const admins = await db
+      .select({
+        user_id: usersTable.user_id,
+        email: usersTable.email,
+        full_name: usersTable.full_name,
+        created_at: usersTable.created_at,
+        updated_at: usersTable.updated_at,
+      })
+      .from(usersTable)
+      .where(eq(usersTable.role, ROLES.ADMIN))
+      .orderBy(usersTable.created_at);
+
+    return admins;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new InternalServerError(
+      "Failed to fetch admins",
+      "FETCH_ADMINS_ERROR"
+    );
+  }
+};
+
+// Admin Dashboard Service
+export const adminDashboard = async () => {
+  try {
+    const now = new Date();
+    const nowFormatted = getCurrentTimeFormatted(now);
+    const closedTenderCondition = sql`${tenderTable.tender_bid_submission_deadline} IS NOT NULL AND ${tenderTable.tender_bid_submission_deadline} < ${nowFormatted}`;
+
+    const [
+      totalTender,
+      totalBids,
+      totalVendors,
+      tenderStatusCounts,
+      bidStatusCounts,
+      vendorStatusCounts,
+      totalLiveTenderValue,
+      recentTender,
+      recentBids,
+    ] = await Promise.all([
+      db.$count(tenderTable),
+      db
+        .select({ count: count() })
+        .from(bidsTable)
+        .leftJoin(tenderTable, eq(bidsTable.tender_id, tenderTable.tender_id))
+        .where(closedTenderCondition)
+        .then((res) => res[0].count),
+      db.$count(vendorProfileTable),
+      db
+        .select({
+          status: tenderTable.tender_status,
+          count: count(),
+        })
+        .from(tenderTable)
+        .where(inArray(tenderTable.tender_status, ["rescheduled", "draft"]))
+        .groupBy(tenderTable.tender_status),
+      db
+        .select({
+          status: bidsTable.bid_status,
+          count: count(),
+        })
+        .from(bidsTable)
+        .where(eq(bidsTable.bid_status, "approved"))
+        .groupBy(bidsTable.bid_status),
+      db
+        .select({
+          status: vendorProfileTable.vendor_status,
+          count: count(),
+        })
+        .from(vendorProfileTable)
+        .where(eq(vendorProfileTable.vendor_status, "approved"))
+        .groupBy(vendorProfileTable.vendor_status),
+      Promise.resolve(0),
+      db
+        .select({
+          tender_id: tenderTable.tender_id,
+          tender_title: tenderTable.tender_title,
+          tender_number: tenderTable.tender_number,
+          created_at: tenderTable.created_at,
+          tender_status: tenderTable.tender_status,
+        })
+        .from(tenderTable)
+        .limit(4)
+        .orderBy(desc(tenderTable.created_at)),
+      db
+        .select({
+          bid_id: bidsTable.bid_id,
+          biz_name: businessTable.biz_legal_name,
+          tender_title: tenderTable.tender_title,
+          created_at: bidsTable.created_at,
+          bid_status: bidsTable.bid_status,
+        })
+        .from(bidsTable)
+        .leftJoin(tenderTable, eq(bidsTable.tender_id, tenderTable.tender_id))
+        .leftJoin(
+          businessTable,
+          eq(bidsTable.vendor_id, businessTable.vendor_id)
+        )
+        .where(closedTenderCondition)
+        .limit(4)
+        .orderBy(desc(bidsTable.created_at)),
+    ]);
+
+    // Extract counts from grouped results
+    const totalLiveTender =
+      tenderStatusCounts.find((t) => t.status === "rescheduled")?.count || 0;
+    const totalDraftTender =
+      tenderStatusCounts.find((t) => t.status === "draft")?.count || 0;
+    const totalApprovedBids =
+      bidStatusCounts.find((b) => b.status === "approved")?.count || 0;
+    const totalApprovedVendors =
+      vendorStatusCounts.find((v) => v.status === "approved")?.count || 0;
+
+    // Get bid counts for recent tenders
+    const recentTenderIds = recentTender.map((t) => t.tender_id);
+
+    const bidsCountResults = await db
+      .select({
+        tenderId: bidsTable.tender_id,
+        count: count(),
+      })
+      .from(bidsTable)
+      .where(inArray(bidsTable.tender_id, recentTenderIds))
+      .groupBy(bidsTable.tender_id);
+
+    const totalBidsOnTenders = recentTenderIds.map((id) => {
+      const found = bidsCountResults.find((r) => r.tenderId === id);
+      return found ? found.count : 0;
+    });
+
+    return {
+      totalTender,
+      totalBids,
+      totalVendors,
+      totalLiveTender,
+      totalDraftTender,
+      totalApprovedBids,
+      totalApprovedVendors,
+      totalValue: Number(totalLiveTenderValue),
+      recentTender,
+      recentBids,
+      totalBidsOnTenders,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new InternalServerError(
+      "Failed to fetch dashboard data",
+      "FETCH_DASHBOARD_ERROR"
+    );
+  }
+};

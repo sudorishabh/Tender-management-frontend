@@ -1,0 +1,314 @@
+import { BASE_URL, ORGANIZATION } from "./seo.config";
+
+// Organization Schema
+export const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${BASE_URL}/#organization`,
+  name: ORGANIZATION.name,
+  alternateName: ORGANIZATION.shortName,
+  url: ORGANIZATION.url,
+  logo: {
+    "@type": "ImageObject",
+    url: ORGANIZATION.logo,
+    width: "512",
+    height: "512",
+  },
+  description: ORGANIZATION.description,
+  foundingDate: ORGANIZATION.foundingDate,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: ORGANIZATION.address.streetAddress,
+    addressLocality: ORGANIZATION.address.addressLocality,
+    addressRegion: ORGANIZATION.address.addressRegion,
+    postalCode: ORGANIZATION.address.postalCode,
+    addressCountry: ORGANIZATION.address.addressCountry,
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: ORGANIZATION.contactPoint.telephone,
+    contactType: ORGANIZATION.contactPoint.contactType,
+    email: ORGANIZATION.contactPoint.email,
+    availableLanguage: ["English", "Hindi"],
+  },
+  sameAs: ORGANIZATION.sameAs,
+};
+
+// Website Schema
+export const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${BASE_URL}/#website`,
+  url: BASE_URL,
+  name: "TERI Tenders - Official eTender Portal",
+  alternateName: [
+    "TERI eTender",
+    "TERI Tender Portal",
+    "TERI Procurement Portal",
+    "The Energy and Resources Institute Tenders",
+    "TERI Bidding Portal",
+  ],
+  description:
+    "Official TERI eTender Portal - India's trusted tender management platform for government and private sector procurement by The Energy and Resources Institute",
+  publisher: {
+    "@id": `${BASE_URL}/#organization`,
+  },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${BASE_URL}/?search={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+  inLanguage: "en-IN",
+  about: [
+    {
+      "@type": "Thing",
+      name: "TERI",
+      sameAs: "https://www.teriin.org/",
+    },
+    {
+      "@type": "Thing",
+      name: "Tender",
+      description:
+        "A formal offer to supply goods or services at a stated price",
+    },
+    {
+      "@type": "Thing",
+      name: "E-Procurement",
+      description: "Electronic procurement and tendering system",
+    },
+  ],
+};
+
+// Service Schema for Tender Management
+export const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${BASE_URL}/#service`,
+  name: "TERI eTender Management System",
+  alternateName: [
+    "TERI Tender Portal",
+    "TERI Procurement System",
+    "TERI Bidding Platform",
+  ],
+  serviceType: "Tender and Procurement Management",
+  provider: {
+    "@id": `${BASE_URL}/#organization`,
+  },
+  description:
+    "Official TERI eTender portal - Comprehensive electronic tender management system by The Energy and Resources Institute. Submit bids for government tenders, research projects, sustainable development initiatives, and environmental programs.",
+  areaServed: {
+    "@type": "Country",
+    name: "India",
+  },
+  audience: {
+    "@type": "Audience",
+    audienceType:
+      "Vendors, Contractors, Suppliers, Research Organizations, NGOs",
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "TERI Tender Services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Tender Publication",
+          description: "Publish and manage tender notices online",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Bid Submission",
+          description: "Submit bids electronically with document management",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Vendor Registration",
+          description: "Register as a vendor to participate in tenders",
+        },
+      },
+    ],
+  },
+};
+
+// Webpage Schema Generator
+export const generateWebPageSchema = (
+  title: string,
+  description: string,
+  url: string,
+  breadcrumbs?: Array<{ name: string; url: string }>
+) => {
+  const schema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}/#webpage`,
+    url: url,
+    name: title,
+    description: description,
+    isPartOf: {
+      "@id": `${BASE_URL}/#website`,
+    },
+    about: {
+      "@id": `${BASE_URL}/#organization`,
+    },
+    inLanguage: "en-IN",
+    datePublished: new Date().toISOString(),
+    dateModified: new Date().toISOString(),
+  };
+
+  if (breadcrumbs && breadcrumbs.length > 0) {
+    schema.breadcrumb = {
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumbs.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: item.url,
+      })),
+    };
+  }
+
+  return schema;
+};
+
+// Tender/Product Schema Generator
+export const generateTenderSchema = (tender: {
+  id: number;
+  title: string;
+  description?: string;
+  department?: string;
+  bidStartDate?: Date;
+  bidEndDate?: Date;
+  estimatedValue?: number;
+  status?: string;
+  referenceNumber?: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": `${BASE_URL}/tender/${tender.id}/#tender`,
+  name: tender.title,
+  description: tender.description || `Tender opportunity: ${tender.title}`,
+  url: `${BASE_URL}/tender/${tender.id}`,
+  category: tender.department || "General",
+  sku: tender.referenceNumber || `TERI-${tender.id}`,
+  brand: {
+    "@type": "Brand",
+    name: "TERI Tenders",
+  },
+  offers: {
+    "@type": "Offer",
+    availability:
+      tender.status === "open"
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    validFrom: tender.bidStartDate?.toISOString(),
+    validThrough: tender.bidEndDate?.toISOString(),
+    price: tender.estimatedValue || 0,
+    priceCurrency: "INR",
+    seller: {
+      "@id": `${BASE_URL}/#organization`,
+    },
+  },
+});
+
+// Event Schema for Active Tenders
+export const generateTenderEventSchema = (tender: {
+  id: number;
+  title: string;
+  description?: string;
+  bidStartDate?: Date;
+  bidEndDate?: Date;
+  location?: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: `Tender: ${tender.title}`,
+  description: tender.description || `Tender bidding event for ${tender.title}`,
+  startDate: tender.bidStartDate?.toISOString(),
+  endDate: tender.bidEndDate?.toISOString(),
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+  location: {
+    "@type": "VirtualLocation",
+    url: `${BASE_URL}/tender/${tender.id}`,
+  },
+  organizer: {
+    "@id": `${BASE_URL}/#organization`,
+  },
+  offers: {
+    "@type": "Offer",
+    url: `${BASE_URL}/tender/${tender.id}`,
+    availability: "https://schema.org/InStock",
+  },
+});
+
+// FAQ Schema for common tender questions
+export const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How do I register as a vendor on TERI Tenders?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "To register as a vendor, click on the 'Register' button on the homepage, fill in your company details, business classification, and required documents. Once verified, you can start bidding on available tenders.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What types of tenders are available on TERI Tenders?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "TERI Tenders hosts various procurement opportunities including IT services, construction, consulting, research projects, equipment supply, and more across multiple departments.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I submit a bid?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "After registering and logging in, browse available tenders, select the one you're interested in, review requirements, prepare your proposal documents, and submit before the deadline using our secure online submission system.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is TERI Tenders free to use?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Vendor registration and browsing tenders is free. Specific tenders may require a tender document fee which will be mentioned in the tender details.",
+      },
+    },
+  ],
+};
+
+// Breadcrumb Schema Generator
+export const generateBreadcrumbSchema = (
+  items: Array<{ name: string; url: string }>
+) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.name,
+    item: item.url,
+  })),
+});
+
+// Combined schemas for the home page
+export const homePageSchemas = [
+  organizationSchema,
+  websiteSchema,
+  serviceSchema,
+  faqSchema,
+];
